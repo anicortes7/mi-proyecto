@@ -13,3 +13,13 @@ body {
 h1{
     font-weight: 700; /* peso negrita dentro del rango */
 }
+.btn-delete {
+  background-color: #c1121f;
+  color: white;
+  border: none;
+}
+
+.btn-delete:hover {
+  background-color: #780000; /* un rojo más oscuro para hover */
+  color: white;
+}

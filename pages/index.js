@@ -101,7 +101,7 @@ export default function Home() {
                   <p className="card-text mb-1"><strong>Marca:</strong> {perfume.brand}</p>
                   <p className="card-text mb-3"><strong>Notas:</strong> {perfume.notes || '-'}</p>
                   <button
-                    className="btn btn-danger mt-auto"
+                    className="btn btn-delete mt-auto"
                     onClick={() => handleDelete(perfume.id)}
                   >
                     Eliminar
