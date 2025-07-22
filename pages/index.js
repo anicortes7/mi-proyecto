@@ -90,6 +90,9 @@ export default function Home() {
     setShowSuggestions(false);
   };
 
+  // dentro del componente Home
+console.log('Sugerencias:', suggestions);
+
   return (
     <>
       <Head>
