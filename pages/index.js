@@ -48,8 +48,9 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-      <main className="container py-5">
-        <h1 className="mb-4">Mi Colección de Perfumes</h1>
+      <main className="container py-5" style={{ backgroundColor: '#FDF0D5' }}>
+        <h1 className="mb-4">La colección de perfumes de Tomi</h1>
+
         <form className="row g-3 mb-4" onSubmit={handleSubmit}>
           <div className="col-md-4">
             <input
@@ -81,37 +82,35 @@ export default function Home() {
             />
           </div>
           <div className="col-12">
-            <button type="submit" className="btn btn-primary">Agregar Perfume</button>
+            <button type="submit" className="btn btn-primary">
+              Agregar Perfume
+            </button>
           </div>
         </form>
 
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Marca</th>
-              <th>Notas</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {perfumes.map((perfume) => (
-              <tr key={perfume.id}>
-                <td>{perfume.name}</td>
-                <td>{perfume.brand}</td>
-                <td>{perfume.notes}</td>
-                <td>
+        {perfumes.length === 0 && (
+          <p>No hay perfumes guardados aún.</p>
+        )}
+
+        <div className="row">
+          {perfumes.map((perfume) => (
+            <div key={perfume.id} className="col-md-4 mb-4">
+              <div className="card h-100 shadow-sm">
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title">{perfume.name}</h5>
+                  <p className="card-text mb-1"><strong>Marca:</strong> {perfume.brand}</p>
+                  <p className="card-text mb-3"><strong>Notas:</strong> {perfume.notes || '-'}</p>
                   <button
-                    className="btn btn-danger btn-sm"
+                    className="btn btn-danger mt-auto"
                     onClick={() => handleDelete(perfume.id)}
                   >
                     Eliminar
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </main>
     </>
   );
