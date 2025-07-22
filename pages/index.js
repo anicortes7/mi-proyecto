@@ -1,5 +1,6 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import debounce from 'lodash.debounce';
 
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
@@ -39,6 +40,30 @@ export default function Home() {
     fetchPerfumes();
   };
 
+  const handleAutocomplete = async (nameInput, brandInput) => {
+    if (nameInput.length < 3) return; // espera mínimo 3 letras
+
+    const res = await fetch('/api/autocomplete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: nameInput, brand: brandInput }),
+    });
+
+    const data = await res.json();
+
+    if (data.notes) setNotes(data.notes);
+    // Si querés mostrar imagen, podés guardarla en un estado extra
+    // if (data.image) setImage(data.image);
+  };
+
+  // Debounce para evitar demasiadas llamadas
+  const debouncedAutocomplete = useCallback(
+    debounce((nameInput, brandInput) => {
+      handleAutocomplete(nameInput, brandInput);
+    }, 500),
+    []
+  );
+
   return (
     <>
       <Head>
@@ -58,7 +83,10 @@ export default function Home() {
               className="form-control"
               placeholder="Nombre"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                debouncedAutocomplete(e.target.value, brand);
+              }}
               required
             />
           </div>
@@ -68,7 +96,10 @@ export default function Home() {
               className="form-control"
               placeholder="Marca"
               value={brand}
-              onChange={(e) => setBrand(e.target.value)}
+              onChange={(e) => {
+                setBrand(e.target.value);
+                debouncedAutocomplete(name, e.target.value);
+              }}
               required
             />
           </div>
@@ -88,9 +119,7 @@ export default function Home() {
           </div>
         </form>
 
-        {perfumes.length === 0 && (
-          <p>No hay perfumes guardados aún.</p>
-        )}
+        {perfumes.length === 0 && <p>No hay perfumes guardados aún.</p>}
 
         <div className="row">
           {perfumes.map((perfume) => (
@@ -98,10 +127,15 @@ export default function Home() {
               <div className="card h-100 shadow-sm">
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{perfume.name}</h5>
-                  <p className="card-text mb-1"><strong>Marca:</strong> {perfume.brand}</p>
-                  <p className="card-text mb-3"><strong>Notas:</strong> {perfume.notes || '-'}</p>
+                  <p className="card-text mb-1">
+                    <strong>Marca:</strong> {perfume.brand}
+                  </p>
+                  <p className="card-text mb-3">
+                    <strong>Notas:</strong> {perfume.notes || '-'}
+                  </p>
                   <button
-                    className="btn btn-delete mt-auto"
+                    className="btn mt-auto"
+                    style={{ backgroundColor: '#c1121f', color: 'white' }}
                     onClick={() => handleDelete(perfume.id)}
                   >
                     Eliminar
