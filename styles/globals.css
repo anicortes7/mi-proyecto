@@ -1,6 +1,15 @@
-
+@font-face {
+  font-family: 'Helvetica';
+  src: url('/fonts/helvetica.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 body {
   background-color: #FDF0D5;
   margin: 0;
-  font-family: sans-serif;
+  font-family: 'Helvetica', Arial, sans-serif;
+}
+h1{
+    font-weight: 700; /* peso negrita dentro del rango */
 }
