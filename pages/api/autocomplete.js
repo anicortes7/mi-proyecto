@@ -30,20 +30,21 @@ export default function handler(req, res) {
 
     response.on('end', () => {
       const body = Buffer.concat(chunks).toString();
+      console.log('Respuesta raw API:', body); // Log para ver respuesta cruda
       try {
         const data = JSON.parse(body);
-        console.log('Respuesta API RapidAPI:', data); // Log para debug
-        // Devolvé los perfumes encontrados para que el frontend muestre sugerencias
+        console.log('Datos parseados:', data); // Log para ver datos parseados
+        // Mandamos perfumes para que el frontend muestre sugerencias
         res.status(200).json({ perfumes: data.perfumes || [] });
       } catch (e) {
-        console.error('Error parseando respuesta:', e);
+        console.error('Error parseando respuesta de la API:', e);
         res.status(500).json({ error: 'Error parseando respuesta de la API' });
       }
     });
   });
 
   request.on('error', (error) => {
-    console.error('Error en request API:', error);
+    console.error('Error en la petición a la API externa:', error);
     res.status(500).json({ error: error.message });
   });
 
