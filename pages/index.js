@@ -58,7 +58,6 @@ export default function Home() {
     });
 
     const data = await res.json();
-    console.log('Datos recibidos del autocomplete:', data);
 
     if (data.perfumes && data.perfumes.length > 0) {
       setSuggestions(data.perfumes);
@@ -69,7 +68,6 @@ export default function Home() {
     }
   };
 
-  // Debounce para no saturar la API con llamadas
   const debouncedAutocomplete = useCallback(debounce(fetchAutocomplete, 500), []);
 
   const handleNameChange = (e) => {
@@ -79,19 +77,16 @@ export default function Home() {
 
   const handleBrandChange = (e) => {
     setBrand(e.target.value);
-    // Opcional: podés buscar también con brand si querés,
-    // o hacer un fetch nuevo combinando name + brand
+    // Podrías hacer fetch también con brand, si querés
   };
 
   const handleSuggestionClick = (perfume) => {
-    setName(perfume.name || '');
+    setName(perfume.perfume || '');
     setBrand(perfume.brand || '');
-    setNotes(perfume.notes || '');
+    setNotes(perfume.notes ? perfume.notes.join(', ') : '');
     setSuggestions([]);
     setShowSuggestions(false);
   };
-
-  console.log('Sugerencias:', suggestions);
 
   return (
     <>
@@ -115,7 +110,7 @@ export default function Home() {
               onChange={handleNameChange}
               required
               onFocus={() => name.length >= 3 && setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)} // timeout para permitir click en sugerencias
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)} 
             />
             {showSuggestions && suggestions.length > 0 && (
               <ul
@@ -124,12 +119,12 @@ export default function Home() {
               >
                 {suggestions.map((perfume) => (
                   <li
-                    key={perfume.id}
+                    key={perfume._id || perfume.id}
                     className="list-group-item list-group-item-action"
                     onMouseDown={() => handleSuggestionClick(perfume)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <strong>{perfume.name}</strong> - {perfume.brand}
+                    <strong>{perfume.perfume}</strong> - {perfume.brand}
                   </li>
                 ))}
               </ul>
