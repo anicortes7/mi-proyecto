@@ -5,13 +5,13 @@ async function fetchPerfumes() {
   const res = await fetch('/api/perfumes');
   const perfumes = await res.json();
   perfumeList.innerHTML = '';
-  perfumes.forEach((perfume, index) => {
+  perfumes.forEach((perfume) => {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${perfume.name}</td>
       <td>${perfume.brand}</td>
       <td>${perfume.notes}</td>
-      <td><button class="btn btn-danger btn-sm" onclick="deletePerfume(${index})">Eliminar</button></td>
+      <td><button class="btn btn-danger btn-sm" onclick="deletePerfume(${perfume.id})">Eliminar</button></td>
     `;
     perfumeList.appendChild(row);
   });
@@ -35,13 +35,13 @@ form.addEventListener('submit', async function(e) {
   fetchPerfumes();
 });
 
-async function deletePerfume(index) {
+async function deletePerfume(id) {
   await fetch('/api/perfumes', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ index })
+    body: JSON.stringify({ id })
   });
   fetchPerfumes();
 }

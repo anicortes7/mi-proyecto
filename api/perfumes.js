@@ -1,28 +1,45 @@
-// api/perfumes.js
+import { createClient } from '@supabase/supabase-js';
 
-let perfumes = [];
+const supabaseUrl = process.env.SUPABASE_URL; // ✅ usa variable de entorno
+const supabaseKey = process.env.SUPABASE_ANON_KEY; // ✅ usa variable de entorno
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'GET') {
-    res.status(200).json(perfumes);
-  } else if (req.method === 'POST') {
+    const { data, error } = await supabase.from('perfumes').select('*');
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+    res.status(200).json(data);
+  }
+
+  if (req.method === 'POST') {
     const { name, brand, notes } = req.body;
     if (!name || !brand) {
-      res.status(400).json({ error: 'Faltan campos obligatorios' });
-      return;
+      return res.status(400).json({ error: 'Faltan campos' });
     }
-    const perfume = { name, brand, notes: notes || '' };
-    perfumes.push(perfume);
-    res.status(201).json({ message: 'Perfume agregado', perfume });
-  } else if (req.method === 'DELETE') {
-    const { index } = req.body;
-    if (index >= 0 && index < perfumes.length) {
-      perfumes.splice(index, 1);
-      res.status(200).json({ message: 'Perfume eliminado' });
-    } else {
-      res.status(400).json({ error: 'Índice inválido' });
+    const { data, error } = await supabase.from('perfumes').insert([
+      { name, brand, notes }
+    ]).select();
+    if (error) {
+      return res.status(500).json({ error: error.message });
     }
-  } else {
+    res.status(201).json(data[0]);
+  }
+
+  if (req.method === 'DELETE') {
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ error: 'Falta id' });
+    }
+    const { error } = await supabase.from('perfumes').delete().eq('id', id);
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+    res.status(200).json({ message: 'Perfume eliminado' });
+  }
+
+  if (!['GET', 'POST', 'DELETE'].includes(req.method)) {
     res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
     res.status(405).end(`Método ${req.method} no permitido`);
   }
