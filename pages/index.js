@@ -7,6 +7,8 @@ export default function Home() {
   const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
   const [notes, setNotes] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const fetchPerfumes = async () => {
     const res = await fetch('/api/perfumes');
@@ -28,6 +30,8 @@ export default function Home() {
     setName('');
     setBrand('');
     setNotes('');
+    setSuggestions([]);
+    setShowSuggestions(false);
     fetchPerfumes();
   };
 
@@ -40,29 +44,51 @@ export default function Home() {
     fetchPerfumes();
   };
 
-  const handleAutocomplete = async (nameInput, brandInput) => {
-    if (nameInput.length < 3) return; // espera mínimo 3 letras
+  const fetchAutocomplete = async (query) => {
+    if (query.length < 3) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
 
     const res = await fetch('/api/autocomplete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: nameInput, brand: brandInput }),
+      body: JSON.stringify({ query }),
     });
 
     const data = await res.json();
 
-    if (data.notes) setNotes(data.notes);
-    // Si querés mostrar imagen, podés guardarla en un estado extra
-    // if (data.image) setImage(data.image);
+    if (data.perfumes && data.perfumes.length > 0) {
+      setSuggestions(data.perfumes);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
   };
 
-  // Debounce para evitar demasiadas llamadas
-  const debouncedAutocomplete = useCallback(
-    debounce((nameInput, brandInput) => {
-      handleAutocomplete(nameInput, brandInput);
-    }, 500),
-    []
-  );
+  // Debounce para no saturar la API con llamadas
+  const debouncedAutocomplete = useCallback(debounce(fetchAutocomplete, 500), []);
+
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+    debouncedAutocomplete(e.target.value);
+  };
+
+  const handleBrandChange = (e) => {
+    setBrand(e.target.value);
+    // Opcional: podés buscar también con brand si querés,
+    // o hacer un fetch nuevo combinando name + brand
+  };
+
+  const handleSuggestionClick = (perfume) => {
+    setName(perfume.name || '');
+    setBrand(perfume.brand || '');
+    setNotes(perfume.notes || '');
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
 
   return (
     <>
@@ -76,33 +102,49 @@ export default function Home() {
       <main className="container py-5" style={{ backgroundColor: '#FDF0D5' }}>
         <h1 className="mb-4">La colección de perfumes de Tomi</h1>
 
-        <form className="row g-3 mb-4" onSubmit={handleSubmit}>
-          <div className="col-md-4">
+        <form className="row g-3 mb-4" onSubmit={handleSubmit} autoComplete="off">
+          <div className="col-md-4 position-relative">
             <input
               type="text"
               className="form-control"
               placeholder="Nombre"
               value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                debouncedAutocomplete(e.target.value, brand);
-              }}
+              onChange={handleNameChange}
               required
+              onFocus={() => name.length >= 3 && setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)} 
+              // timeout para permitir click en sugerencias
             />
+            {showSuggestions && suggestions.length > 0 && (
+              <ul
+                className="list-group position-absolute w-100"
+                style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}
+              >
+                {suggestions.map((perfume) => (
+                  <li
+                    key={perfume.id}
+                    className="list-group-item list-group-item-action"
+                    onMouseDown={() => handleSuggestionClick(perfume)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <strong>{perfume.name}</strong> - {perfume.brand}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
+
           <div className="col-md-4">
             <input
               type="text"
               className="form-control"
               placeholder="Marca"
               value={brand}
-              onChange={(e) => {
-                setBrand(e.target.value);
-                debouncedAutocomplete(name, e.target.value);
-              }}
+              onChange={handleBrandChange}
               required
             />
           </div>
+
           <div className="col-md-4">
             <input
               type="text"
@@ -112,6 +154,7 @@ export default function Home() {
               onChange={(e) => setNotes(e.target.value)}
             />
           </div>
+
           <div className="col-12">
             <button type="submit" className="btn btn-primary">
               Agregar Perfume

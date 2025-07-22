@@ -1,18 +1,20 @@
 import https from 'https';
 
 export default function handler(req, res) {
-  if (req.method !== 'GET') {
+  if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  // Ejemplo: recibís un perfumeId por query o parámetro
-  // Acá pongo un perfumeId fijo porque en tu ejemplo usan un path con id
-  const perfumeId = req.query.id || '66c70dee71fb63515fcfa1bf';
+  const { query } = req.body; // El texto que buscás para autocomplete
+
+  if (!query || query.length < 3) {
+    return res.status(400).json({ error: 'Se necesita un query de al menos 3 caracteres' });
+  }
 
   const options = {
     method: 'GET',
     hostname: 'fragrancefinder-api.p.rapidapi.com',
-    path: `/dupes/${perfumeId}`,
+    path: `/perfumes/search?q=${encodeURIComponent(query)}`,
     headers: {
       'x-rapidapi-key': process.env.RAPIDAPI_KEY,
       'x-rapidapi-host': 'fragrancefinder-api.p.rapidapi.com',
@@ -30,14 +32,10 @@ export default function handler(req, res) {
       const body = Buffer.concat(chunks).toString();
       try {
         const data = JSON.parse(body);
-        // Mandá lo que necesites, por ej:
-        res.status(200).json({
-          notes: data.notes || '',
-          image: data.image || '',
-          // agrega más campos según la respuesta real
-        });
+        // Devolvé los perfumes encontrados para que el frontend muestre sugerencias
+        res.status(200).json({ perfumes: data.perfumes || [] });
       } catch (e) {
-        res.status(500).json({ error: 'Error parseando la respuesta de la API' });
+        res.status(500).json({ error: 'Error parseando respuesta de la API' });
       }
     });
   });
