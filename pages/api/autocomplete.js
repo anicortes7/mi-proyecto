@@ -32,15 +32,18 @@ export default function handler(req, res) {
       const body = Buffer.concat(chunks).toString();
       try {
         const data = JSON.parse(body);
+        console.log('Respuesta API RapidAPI:', data); // Log para debug
         // Devolvé los perfumes encontrados para que el frontend muestre sugerencias
         res.status(200).json({ perfumes: data.perfumes || [] });
       } catch (e) {
+        console.error('Error parseando respuesta:', e);
         res.status(500).json({ error: 'Error parseando respuesta de la API' });
       }
     });
   });
 
   request.on('error', (error) => {
+    console.error('Error en request API:', error);
     res.status(500).json({ error: error.message });
   });
 

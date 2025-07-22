@@ -58,6 +58,7 @@ export default function Home() {
     });
 
     const data = await res.json();
+    console.log('Datos recibidos del autocomplete:', data);
 
     if (data.perfumes && data.perfumes.length > 0) {
       setSuggestions(data.perfumes);
@@ -90,8 +91,7 @@ export default function Home() {
     setShowSuggestions(false);
   };
 
-  // dentro del componente Home
-console.log('Sugerencias:', suggestions);
+  console.log('Sugerencias:', suggestions);
 
   return (
     <>
@@ -115,8 +115,7 @@ console.log('Sugerencias:', suggestions);
               onChange={handleNameChange}
               required
               onFocus={() => name.length >= 3 && setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)} 
-              // timeout para permitir click en sugerencias
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)} // timeout para permitir click en sugerencias
             />
             {showSuggestions && suggestions.length > 0 && (
               <ul
