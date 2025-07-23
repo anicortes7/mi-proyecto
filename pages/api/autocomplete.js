@@ -22,7 +22,9 @@ export default function handler(req, res) {
   }
 
   const results = [];
-  const filePath = path.join(process.cwd(), 'data', 'fra_cleaned.csv');
+  const filePath = path.join(process.cwd(), 'public', 'data', 'fra_cleaned.csv');
+
+  console.log('Ruta CSV:', filePath);
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -31,6 +33,8 @@ export default function handler(req, res) {
       const brand = row.brand?.toLowerCase() || '';
       const notes = row.notes?.toLowerCase() || '';
       const q = query.toLowerCase();
+
+      console.log('Fila:', { name, brand, notes, q });
 
       if (name.includes(q) || brand.includes(q) || notes.includes(q)) {
         results.push({
@@ -44,10 +48,11 @@ export default function handler(req, res) {
       }
     })
     .on('end', () => {
+      console.log('Resultados encontrados:', results);
       res.status(200).json({ perfumes: results.slice(0, 10) });
     })
     .on('error', (err) => {
-      console.error(err);
+      console.error('Error:', err);
       res.status(500).json({ error: 'Error procesando el archivo CSV' });
     });
 }
