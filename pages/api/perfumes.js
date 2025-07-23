@@ -1,15 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  process.env.SUPABASE_URL,     // ⚠️ PONER ESTO EN VERCEL Y .env.local
-  process.env.SUPABASE_ANON_KEY // ⚠️ PONER ESTO EN VERCEL Y .env.local
+  process.env.SUPABASE_URL,     // ⚠️ Asegúrate de tener esto en Vercel y .env.local
+  process.env.SUPABASE_ANON_KEY // ⚠️ Asegúrate de tener esto en Vercel y .env.local
 );
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     const { data, error } = await supabase.from('perfumes').select('*');
     if (error) return res.status(500).json({ error: error.message });
-    return res.status(200).json(data);
+    res.status(200).json(data);
   }
 
   if (req.method === 'POST') {
@@ -19,27 +19,30 @@ export default async function handler(req, res) {
       .insert([{ name, brand, notes }])
       .select();
     if (error) return res.status(500).json({ error: error.message });
-    return res.status(201).json(data[0]);
+    res.status(201).json(data[0]);
   }
 
   if (req.method === 'PUT') {
-    const { id, type } = req.body;
+    const { id, type, rating } = req.body;
+
+    const updateData = {};
+    if (type !== undefined) updateData.type = type;
+    if (rating !== undefined) updateData.rating = rating;
+
     const { data, error } = await supabase
       .from('perfumes')
-      .update({ type })
+      .update(updateData)
       .eq('id', id)
       .select();
+
     if (error) return res.status(500).json({ error: error.message });
-    return res.status(200).json(data[0]);
+    res.status(200).json(data[0]);
   }
 
   if (req.method === 'DELETE') {
     const { id } = req.body;
     const { error } = await supabase.from('perfumes').delete().eq('id', id);
     if (error) return res.status(500).json({ error: error.message });
-    return res.status(200).json({ message: 'Perfume eliminado' });
+    res.status(200).json({ message: 'Perfume eliminado' });
   }
-
-  // Si no coincide ningún método permitido
-  return res.status(405).json({ error: 'Método no permitido' });
 }

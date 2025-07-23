@@ -3,6 +3,7 @@ import { useState } from 'react';
 export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
   const [showEdit, setShowEdit] = useState(false);
   const [newType, setNewType] = useState(perfume.type || '');
+  const [rating, setRating] = useState(perfume.rating || 0);
 
   const handleUpdate = async () => {
     await fetch('/api/perfumes', {
@@ -11,7 +12,17 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
       body: JSON.stringify({ id: perfume.id, type: newType }),
     });
     setShowEdit(false);
-    onUpdated(); // Recarga perfumes
+    onUpdated();
+  };
+
+  const handleRating = async (newRating) => {
+    setRating(newRating);
+    await fetch('/api/perfumes', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: perfume.id, rating: newRating }),
+    });
+    onUpdated();
   };
 
   return (
@@ -39,11 +50,29 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
               </>
             )}
           </p>
+
           {perfume.type && (
             <p className="card-text mb-1">
               <strong>Tipo:</strong> {perfume.type}
             </p>
           )}
+
+          <div className="mb-2">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                onClick={() => handleRating(star)}
+                style={{
+                  cursor: 'pointer',
+                  color: star <= rating ? '#FFD700' : '#CCC',
+                  fontSize: '1.5rem',
+                }}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+
           <div className="mt-auto d-flex justify-content-between">
             <button
               className="btn btn-sm btn-outline-secondary"
@@ -91,10 +120,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
                   <option value="Cologne">Cologne</option>
                   <option value="Mist">Body Mist</option>
                 </select>
-                <button
-                  className="btn btn-primary"
-                  onClick={handleUpdate}
-                >
+                <button className="btn btn-primary" onClick={handleUpdate}>
                   Guardar
                 </button>
               </div>
