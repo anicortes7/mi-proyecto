@@ -28,7 +28,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
   return (
     <div className="col-md-4 mb-4">
-      <div className="card h-100 shadow-sm position-relative">
+      <div className="card bg-card h-100 shadow-sm position-relative">
         {perfume.type && (
           <span
             className="badge bg-primary position-absolute"
@@ -96,8 +96,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
                 Editar
               </button>
               <button
-                className="btn btn-sm"
-                style={{ backgroundColor: '#c1121f', color: 'white' }}
+                className="btn btn-sm btn-delete"
                 onClick={() => onDelete(perfume.id)}
               >
                 Eliminar
@@ -106,7 +105,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
             {perfume.wishlist && onMoveToCollection && (
               <button
-                className="btn btn-sm btn-success"
+                className="btn btn-sm btn-primary"
                 onClick={() => onMoveToCollection(perfume.id)}
               >
                 Mover a Colección

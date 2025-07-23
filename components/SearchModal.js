@@ -98,7 +98,12 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
                 {suggestions.length > 0 && (
                   <ul
                     className="list-group position-absolute w-100"
-                    style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}
+                    style={{
+                      zIndex: 1000,
+                      maxHeight: '200px',
+                      overflowY: 'auto',
+                      backgroundColor: 'var(--color-bg)',
+                    }}
                   >
                     {suggestions.map((perfume, index) => (
                       <li
@@ -147,7 +152,6 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
                 }
               />
 
-              {/* Checkbox Wishlist */}
               <div className="form-check mb-3">
                 <input
                   className="form-check-input"

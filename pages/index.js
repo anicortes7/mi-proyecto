@@ -61,25 +61,21 @@ export default function Home() {
           onPerfumeAdded={fetchPerfumes}
         />
 
-        {/* Tabs */}
-        <ul className="nav nav-tabs mb-4">
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === 'collection' ? 'active' : ''}`}
-              onClick={() => setActiveTab('collection')}
-            >
-              Mi Colección
-            </button>
-          </li>
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === 'wishlist' ? 'active' : ''}`}
-              onClick={() => setActiveTab('wishlist')}
-            >
-              Mi Wishlist
-            </button>
-          </li>
-        </ul>
+        {/* Tabs actualizados */}
+        <div className="tab-container mb-4">
+          <button
+            className={`btn btn-secondary ${activeTab === 'collection' ? 'active' : ''}`}
+            onClick={() => setActiveTab('collection')}
+          >
+            Mi Colección
+          </button>
+          <button
+            className={`btn btn-secondary ${activeTab === 'wishlist' ? 'active' : ''}`}
+            onClick={() => setActiveTab('wishlist')}
+          >
+            Mi Wishlist
+          </button>
+        </div>
 
         {/* Contenido */}
         {activeTab === 'collection' && (
