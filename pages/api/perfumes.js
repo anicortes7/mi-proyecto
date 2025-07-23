@@ -23,11 +23,12 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
-    const { id, type, rating } = req.body;
+    const { id, type, rating, size } = req.body;
 
     const updateData = {};
     if (type !== undefined) updateData.type = type;
     if (rating !== undefined) updateData.rating = rating;
+    if (size !== undefined) updateData.size = size;
 
     const { data, error } = await supabase
       .from('perfumes')

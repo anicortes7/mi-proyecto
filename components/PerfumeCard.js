@@ -3,13 +3,18 @@ import { useState } from 'react';
 export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
   const [showEdit, setShowEdit] = useState(false);
   const [newType, setNewType] = useState(perfume.type || '');
+  const [newSize, setNewSize] = useState(perfume.size || '');
   const [rating, setRating] = useState(perfume.rating || 0);
 
   const handleUpdate = async () => {
     await fetch('/api/perfumes', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: perfume.id, type: newType }),
+      body: JSON.stringify({
+        id: perfume.id,
+        type: newType,
+        size: newSize
+      }),
     });
     setShowEdit(false);
     onUpdated();
@@ -57,6 +62,12 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
             </p>
           )}
 
+          {perfume.size && (
+            <p className="card-text mb-1">
+              <strong>Tamaño:</strong> {perfume.size} ml
+            </p>
+          )}
+
           <div className="mb-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <span
@@ -100,7 +111,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Editar Tipo</h5>
+                <h5 className="modal-title">Editar Perfume</h5>
                 <button
                   type="button"
                   className="btn-close"
@@ -120,6 +131,16 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
                   <option value="Cologne">Cologne</option>
                   <option value="Mist">Body Mist</option>
                 </select>
+
+                <input
+                  type="number"
+                  className="form-control mb-3"
+                  placeholder="Tamaño (ml)"
+                  value={newSize}
+                  onChange={(e) => setNewSize(e.target.value)}
+                  min="1"
+                />
+
                 <button className="btn btn-primary" onClick={handleUpdate}>
                   Guardar
                 </button>
