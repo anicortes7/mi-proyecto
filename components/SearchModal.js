@@ -5,6 +5,8 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
   const [query, setQuery] = useState('');
   const [brand, setBrand] = useState('');
   const [notes, setNotes] = useState({ top: '', middle: '', base: '' });
+  const [type, setType] = useState('');
+  const [size, setSize] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
   const fetchAutocomplete = async (input) => {
@@ -53,11 +55,19 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
     await fetch('/api/perfumes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: query, brand, notes }),
+      body: JSON.stringify({
+        name: query,
+        brand,
+        notes,
+        type,
+        size: size ? parseInt(size) : null, // asegurarse que sea número
+      }),
     });
     setQuery('');
     setBrand('');
     setNotes({ top: '', middle: '', base: '' });
+    setType('');
+    setSize('');
     setSuggestions([]);
     onPerfumeAdded();
     onClose();
@@ -105,6 +115,43 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
                     ))}
                   </ul>
                 )}
+              </div>
+
+              <div className="mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Marca"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Tipo</label>
+                <select
+                  className="form-select"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                >
+                  <option value="">Seleccionar tipo</option>
+                  <option value="EDT">Eau de Toilette (EDT)</option>
+                  <option value="EDP">Eau de Parfum (EDP)</option>
+                  <option value="Parfum">Parfum</option>
+                  <option value="Cologne">Cologne</option>
+                  <option value="Mist">Body Mist</option>
+                </select>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Tamaño (ml)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="Ej: 100"
+                  value={size}
+                  onChange={(e) => setSize(e.target.value)}
+                />
               </div>
 
               <button type="submit" className="btn btn-primary">
