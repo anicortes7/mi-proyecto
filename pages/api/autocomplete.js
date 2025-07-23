@@ -2,6 +2,13 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 
+// Función para formatear slugs como "marca-ejemplo" a "Marca Ejemplo"
+function formatSlugToTitle(slug) {
+  return slug
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, (l) => l.toUpperCase());
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
@@ -38,7 +45,7 @@ export default async function handler(req, res) {
   // Formatear para devolver bonito
   const formatted = results.map(row => ({
     perfume: row.Perfume?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || '',
-    brand: row.Brand || '',
+    brand: formatSlugToTitle(row.Brand || ''),
     notes: [row.Top, row.Middle, row.Base].filter(Boolean).join(', '),
   }));
 
