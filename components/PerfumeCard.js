@@ -28,11 +28,15 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
   return (
     <div className="col-md-4 mb-4">
-      <div className="card bg-card h-100 shadow-sm position-relative">
+      <div className="card h-100 shadow-sm position-relative">
         {perfume.type && (
           <span
-            className="badge bg-primary position-absolute"
-            style={{ top: '10px', right: '10px', fontWeight: 'normal' }}
+            className="badge position-absolute"
+            style={{
+              top: '10px',
+              right: '10px',
+              fontWeight: 'normal',
+            }}
           >
             {perfume.type}
           </span>
@@ -40,8 +44,12 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
         {perfume.size && (
           <span
-            className="badge bg-secondary position-absolute"
-            style={{ top: perfume.type ? '40px' : '10px', right: '10px', fontWeight: 'normal' }}
+            className="badge position-absolute"
+            style={{
+              top: perfume.type ? '40px' : '10px',
+              right: '10px',
+              fontWeight: 'normal',
+            }}
           >
             {perfume.size} ml
           </span>
@@ -90,7 +98,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
           <div className="mt-auto d-flex flex-column gap-2">
             <div className="d-flex justify-content-between">
               <button
-                className="btn btn-sm btn-outline-secondary"
+                className="btn btn-sm btn-secondary"
                 onClick={() => setShowEdit(true)}
               >
                 Editar

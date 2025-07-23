@@ -49,11 +49,13 @@ export default function Home() {
         />
       </Head>
       <main className="container py-5">
-        <h1 className="mb-4">La colección de perfumes de Tomi</h1>
-
-        <button className="btn btn-primary mb-4" onClick={() => setModalOpen(true)}>
-          Agregar Perfume
-        </button>
+        {/* Título + Botón en misma row */}
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h1 className="mb-0">La colección de perfumes de Tomi</h1>
+          <button className="btn btn-primary no-border" onClick={() => setModalOpen(true)}>
+            Agregar Perfume
+          </button>
+        </div>
 
         <SearchModal
           isOpen={modalOpen}
@@ -62,15 +64,15 @@ export default function Home() {
         />
 
         {/* Tabs actualizados */}
-        <div className="tab-container mb-4">
+        <div className="nav nav-tabs mb-4">
           <button
-            className={`btn btn-secondary ${activeTab === 'collection' ? 'active' : ''}`}
+            className={`nav-link flex-fill text-center ${activeTab === 'collection' ? 'active' : ''}`}
             onClick={() => setActiveTab('collection')}
           >
             Mi Colección
           </button>
           <button
-            className={`btn btn-secondary ${activeTab === 'wishlist' ? 'active' : ''}`}
+            className={`nav-link flex-fill text-center ${activeTab === 'wishlist' ? 'active' : ''}`}
             onClick={() => setActiveTab('wishlist')}
           >
             Mi Wishlist

@@ -1,5 +1,5 @@
 :root {
-  --color-bg: #FEF8EC; /* actualizado */
+  --color-bg: #FEF8EC;
   --color-primary: #003049;
   --color-secondary: #336683;
   --color-accent: #4D81A0;
@@ -23,7 +23,6 @@ body {
   color: var(--color-text);
 }
 
-/* Títulos */
 h1 {
   font-weight: 700;
 }
@@ -51,7 +50,7 @@ button:hover {
   background-color: #780000;
 }
 
-/* Botón primario */
+/* Botón primario (Agregar Perfume) sin borde */
 .btn-primary {
   background-color: var(--color-primary);
   color: #fff;
@@ -61,14 +60,14 @@ button:hover {
   background-color: var(--color-secondary);
 }
 
-/* Botón secundario */
+/* Botón secundario (Tabs) */
 .btn-secondary {
   background-color: transparent;
   color: var(--color-primary);
-  border: 1px solid var(--color-primary);
+  border: none; /* sin borde claro */
 }
 
-.btn-secondary:hover {
+.btn-secondary.active {
   background-color: var(--color-primary);
   color: #fff;
 }
@@ -76,7 +75,7 @@ button:hover {
 /* Tarjetas */
 .card {
   border-radius: 8px;
-  background: var(--color-accentlight); 
+  background: var(--color-accentlight);
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   padding: 1rem;
   transition: box-shadow 0.2s ease-in-out;
@@ -104,27 +103,51 @@ textarea:focus {
   outline: none;
 }
 
-/* Modal content */
+/* Modal */
 .modal-content {
   border-radius: 8px;
 }
 
-/* Wishlist badge (opcional) */
-.badge-wishlist {
-  background: var(--color-accent);
+/* Badges dentro de PerfumeCard */
+.badge {
+  background: var(--color-secondary);
   color: #fff;
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
   font-size: 0.75rem;
 }
 
-/* Contenedor tabs (colección/wishlist) */
-.tab-container {
-  background: var(--color-bg); /* fondo igual que body y card */
-  border-radius: 8px;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
+/* Contenedor de tabs */
+.nav-tabs {
   display: flex;
-  gap: 1rem;
+  width: 100%;
+}
+
+.nav-link {
+  flex: 1;
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  border-radius: 0;
+  padding: 0.75rem 1rem;
+}
+
+.nav-link.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* Contenedor tabs envuelto */
+.tab-container {
+  background: var(--color-bg);
+  border-radius: 8px;
+  padding: 0;
+  margin-bottom: 1rem;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* Botón sin borde extra si le llega no-border */
+.no-border {
+  border: none !important;
 }
