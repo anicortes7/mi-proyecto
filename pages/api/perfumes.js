@@ -1,173 +1,111 @@
-import { useState, useCallback } from 'react';
-import debounce from 'lodash.debounce';
+import { createClient } from '@supabase/supabase-js';
 
-export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
-  const [query, setQuery] = useState('');
-  const [brand, setBrand] = useState('');
-  const [notes, setNotes] = useState({ top: '', middle: '', base: '' });
-  const [type, setType] = useState('');
-  const [size, setSize] = useState(undefined);
-  const [wishlist, setWishlist] = useState(false);
-  const [suggestions, setSuggestions] = useState([]);
+const supabase = createClient(
+  process.env.SUPABASE_URL,     // ✅ Configurado en Vercel y .env.local
+  process.env.SUPABASE_ANON_KEY // ✅ Configurado en Vercel y .env.local
+);
 
-  const fetchAutocomplete = async (input) => {
-    if (input.length < 2) {
-      setSuggestions([]);
-      return;
+export default async function handler(req, res) {
+  if (req.method === 'GET') {
+    const { data, error } = await supabase.from('perfumes').select('*');
+    if (error) {
+      console.error('GET error:', error);
+      return res.status(500).json({ error: error.message });
     }
+    return res.status(200).json(data);
+  }
 
-    const res = await fetch('/api/autocomplete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: input }),
-    });
+  if (req.method === 'POST') {
+    try {
+      const { name, brand, notes, type, size, wishlist } = req.body;
 
-    const data = await res.json();
-    console.log('Datos recibidos:', data);
+      console.log('POST body:', req.body);
 
-    if (data.perfumes && data.perfumes.length > 0) {
-      setSuggestions(data.perfumes);
-    } else {
-      setSuggestions([]);
+      // Validar valores
+      if (!name || !brand) {
+        console.error('Validation error: name or brand missing');
+        return res.status(400).json({ error: 'Name and brand are required' });
+      }
+
+      const insertData = {
+        name,
+        brand,
+        notes, // Asegúrate que notes es un objeto válido si la columna es JSONB
+      };
+
+      if (type !== undefined) insertData.type = type;
+      if (size !== undefined) insertData.size = size;
+      if (wishlist !== undefined) insertData.wishlist = !!wishlist; // ⚡️ Fuerza booleano
+
+      console.log('Insert data:', insertData);
+
+      const { data, error } = await supabase
+        .from('perfumes')
+        .insert([insertData])
+        .select();
+
+      if (error) {
+        console.error('Supabase insert error:', error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      return res.status(201).json(data[0]);
+    } catch (err) {
+      console.error('Unexpected POST error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
     }
-  };
+  }
 
-  const debouncedAutocomplete = useCallback(debounce(fetchAutocomplete, 300), []);
+  if (req.method === 'PUT') {
+    try {
+      const { id, type, rating, size, wishlist } = req.body;
 
-  const handleQueryChange = (e) => {
-    const input = e.target.value;
-    setQuery(input);
-    debouncedAutocomplete(input);
-  };
+      console.log('PUT body:', req.body);
 
-  const handleSuggestionClick = (perfume) => {
-    setQuery(perfume.perfume || '');
-    setBrand(perfume.brand || '');
-    setNotes({
-      top: perfume.notes?.top || '',
-      middle: perfume.notes?.middle || '',
-      base: perfume.notes?.base || '',
-    });
-    setWishlist(perfume.wishlist || false);
-    setSuggestions([]);
-  };
+      const updateData = {};
+      if (type !== undefined) updateData.type = type;
+      if (rating !== undefined) updateData.rating = rating;
+      if (size !== undefined) updateData.size = size;
+      if (wishlist !== undefined) updateData.wishlist = !!wishlist;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await fetch('/api/perfumes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: query, brand, notes, type, size, wishlist }),
-    });
-    setQuery('');
-    setBrand('');
-    setNotes({ top: '', middle: '', base: '' });
-    setType('');
-    setSize(undefined);
-    setWishlist(false);
-    setSuggestions([]);
-    onPerfumeAdded();
-    onClose();
-  };
+      console.log('Update data:', updateData);
 
-  if (!isOpen) return null;
+      const { data, error } = await supabase
+        .from('perfumes')
+        .update(updateData)
+        .eq('id', id)
+        .select();
 
-  return (
-    <div
-      className="modal show d-block"
-      tabIndex="-1"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-    >
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Agregar Perfume</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
-          </div>
-          <div className="modal-body">
-            <form onSubmit={handleSubmit} autoComplete="off">
-              <div className="mb-3 position-relative">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Perfume, marca o notas"
-                  value={query}
-                  onChange={handleQueryChange}
-                  required
-                />
-                {suggestions.length > 0 && (
-                  <ul
-                    className="list-group position-absolute w-100"
-                    style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}
-                  >
-                    {suggestions.map((perfume, index) => (
-                      <li
-                        key={index}
-                        className="list-group-item list-group-item-action"
-                        onMouseDown={() => handleSuggestionClick(perfume)}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <strong>{perfume.perfume}</strong> - {perfume.brand}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+      if (error) {
+        console.error('Supabase update error:', error);
+        return res.status(500).json({ error: error.message });
+      }
 
-              {brand && (
-                <div className="mb-3">
-                  <p className="mb-0">
-                    <strong>Marca:</strong> {brand}
-                  </p>
-                </div>
-              )}
+      return res.status(200).json(data[0]);
+    } catch (err) {
+      console.error('Unexpected PUT error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 
-              <select
-                className="form-select mb-3"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-              >
-                <option value="">Seleccionar tipo</option>
-                <option value="EDT">Eau de Toilette (EDT)</option>
-                <option value="EDP">Eau de Parfum (EDP)</option>
-                <option value="Parfum">Parfum</option>
-                <option value="Cologne">Cologne</option>
-                <option value="Mist">Body Mist</option>
-              </select>
+  if (req.method === 'DELETE') {
+    try {
+      const { id } = req.body;
+      console.log('DELETE id:', id);
 
-              <input
-                type="number"
-                className="form-control mb-3"
-                placeholder="Tamaño (ml)"
-                value={size || ''}
-                onChange={(e) =>
-                  e.target.value === ''
-                    ? setSize(undefined)
-                    : setSize(Number(e.target.value))
-                }
-              />
+      const { error } = await supabase.from('perfumes').delete().eq('id', id);
+      if (error) {
+        console.error('Supabase delete error:', error);
+        return res.status(500).json({ error: error.message });
+      }
 
-              {/* Checkbox Wishlist */}
-              <div className="form-check mb-3">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="wishlistCheck"
-                  checked={wishlist}
-                  onChange={(e) => setWishlist(e.target.checked)}
-                />
-                <label className="form-check-label" htmlFor="wishlistCheck">
-                  Añadir a Wishlist
-                </label>
-              </div>
+      return res.status(200).json({ message: 'Perfume eliminado' });
+    } catch (err) {
+      console.error('Unexpected DELETE error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 
-              <button type="submit" className="btn btn-primary">
-                Guardar
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  // Método no permitido
+  return res.status(405).json({ error: 'Method not allowed' });
 }
