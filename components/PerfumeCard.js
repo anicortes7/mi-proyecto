@@ -28,8 +28,8 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
   return (
     <div className="col-md-4 mb-4">
-      <div className="card h-100 shadow-sm">
-        <div className="card-body d-flex flex-column">
+      <div className="card h-100 shadow-sm d-flex flex-column">
+        <div className="card-body d-flex flex-column flex-grow-1">
           <div className="d-flex align-items-center justify-content-between mb-2">
             <h5 className="card-title mb-0">{perfume.name}</h5>
             <div className="d-flex flex-column align-items-end">
@@ -62,26 +62,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
           <p className="card-text mb-1">{perfume.brand}</p>
 
-          <p className="card-text mb-1">
-            {perfume.notes?.top && (
-              <>
-                <strong>Top:</strong> {perfume.notes.top}
-                <br />
-              </>
-            )}
-            {perfume.notes?.middle && (
-              <>
-                <strong>Middle:</strong> {perfume.notes.middle}
-                <br />
-              </>
-            )}
-            {perfume.notes?.base && (
-              <>
-                <strong>Base:</strong> {perfume.notes.base}
-              </>
-            )}
-          </p>
-
+          {/* Rating entre marca y notas */}
           <div className="mb-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <span
@@ -98,31 +79,54 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
             ))}
           </div>
 
-          <div className="mt-auto d-flex flex-column gap-2">
-            <div className="d-flex justify-content-between">
-              <button
-                className="btn btn-sm btn-secondary"
-                onClick={() => setShowEdit(true)}
-              >
-                Editar
-              </button>
-              <button
-                className="btn btn-sm btn-delete"
-                onClick={() => onDelete(perfume.id)}
-              >
-                Eliminar
-              </button>
-            </div>
+          {/* Notas con iconos */}
+          <div className="mb-2">
+            {perfume.notes?.top && (
+              <div className="d-flex align-items-center mb-1">
+                <img src="/icons/top.ico" alt="Top" style={{ width: '16px', marginRight: '6px' }} />
+                <span><strong>Top:</strong> {perfume.notes.top}</span>
+              </div>
+            )}
+            {perfume.notes?.middle && (
+              <div className="d-flex align-items-center mb-1">
+                <img src="/icons/middle.ico" alt="Middle" style={{ width: '16px', marginRight: '6px' }} />
+                <span><strong>Middle:</strong> {perfume.notes.middle}</span>
+              </div>
+            )}
+            {perfume.notes?.base && (
+              <div className="d-flex align-items-center">
+                <img src="/icons/base.ico" alt="Base" style={{ width: '16px', marginRight: '6px' }} />
+                <span><strong>Base:</strong> {perfume.notes.base}</span>
+              </div>
+            )}
+          </div>
 
-            {perfume.wishlist && onMoveToCollection && (
+          {/* Botones en esquina inferior derecha */}
+          <div className="mt-auto d-flex justify-content-end gap-2 pt-2">
+            <button
+              className="btn btn-sm btn-secondary"
+              onClick={() => setShowEdit(true)}
+            >
+              Editar
+            </button>
+            <button
+              className="btn btn-sm btn-delete"
+              onClick={() => onDelete(perfume.id)}
+            >
+              Eliminar
+            </button>
+          </div>
+
+          {perfume.wishlist && onMoveToCollection && (
+            <div className="mt-2 d-flex justify-content-end">
               <button
                 className="btn btn-sm btn-primary"
                 onClick={() => onMoveToCollection(perfume.id)}
               >
                 Mover a Colección
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
