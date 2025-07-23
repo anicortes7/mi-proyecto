@@ -26,6 +26,10 @@ export default function Home() {
     fetchPerfumes();
   };
 
+  // Separar perfumes en wishlist y colección
+  const wishlistPerfumes = perfumes.filter(p => p.wishlist);
+  const collectionPerfumes = perfumes.filter(p => !p.wishlist);
+
   return (
     <>
       <Head>
@@ -48,18 +52,43 @@ export default function Home() {
           onPerfumeAdded={fetchPerfumes}
         />
 
-        {perfumes.length === 0 && <p>No hay perfumes guardados aún.</p>}
+        {/* Sección Wishlist */}
+        <section className="mb-5">
+          <h2>Wishlist</h2>
+          {wishlistPerfumes.length === 0 ? (
+            <p>No hay perfumes en la wishlist.</p>
+          ) : (
+            <div className="row">
+              {wishlistPerfumes.map((perfume) => (
+                <PerfumeCard
+                  key={perfume.id}
+                  perfume={perfume}
+                  onDelete={handleDelete}
+                  onUpdated={fetchPerfumes}
+                />
+              ))}
+            </div>
+          )}
+        </section>
 
-        <div className="row">
-          {perfumes.map((perfume) => (
-            <PerfumeCard
-              key={perfume.id}
-              perfume={perfume}
-              onDelete={handleDelete}
-              onUpdated={fetchPerfumes} // ✅ clave para refrescar después de editar tipo
-            />
-          ))}
-        </div>
+        {/* Sección Colección */}
+        <section>
+          <h2>Perfumes en la colección</h2>
+          {collectionPerfumes.length === 0 ? (
+            <p>No hay perfumes guardados aún.</p>
+          ) : (
+            <div className="row">
+              {collectionPerfumes.map((perfume) => (
+                <PerfumeCard
+                  key={perfume.id}
+                  perfume={perfume}
+                  onDelete={handleDelete}
+                  onUpdated={fetchPerfumes}
+                />
+              ))}
+            </div>
+          )}
+        </section>
       </main>
     </>
   );

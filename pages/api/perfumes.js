@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const { name, brand, notes, type, size } = req.body;
+    const { name, brand, notes, type, size, wishlist } = req.body;
 
     const insertData = {
       name,
@@ -23,6 +23,7 @@ export default async function handler(req, res) {
 
     if (type !== undefined) insertData.type = type;
     if (size !== undefined) insertData.size = size;
+    if (wishlist !== undefined) insertData.wishlist = wishlist;
 
     const { data, error } = await supabase
       .from('perfumes')
@@ -34,12 +35,13 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
-    const { id, type, rating, size } = req.body;
+    const { id, type, rating, size, wishlist } = req.body;
 
     const updateData = {};
     if (type !== undefined) updateData.type = type;
     if (rating !== undefined) updateData.rating = rating;
     if (size !== undefined) updateData.size = size;
+    if (wishlist !== undefined) updateData.wishlist = wishlist;
 
     const { data, error } = await supabase
       .from('perfumes')

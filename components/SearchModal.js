@@ -7,6 +7,7 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
   const [notes, setNotes] = useState({ top: '', middle: '', base: '' });
   const [type, setType] = useState('');
   const [size, setSize] = useState('');
+  const [wishlist, setWishlist] = useState(false); // NUEVO
   const [suggestions, setSuggestions] = useState([]);
 
   const fetchAutocomplete = async (input) => {
@@ -47,6 +48,7 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
       middle: perfume.notes?.middle || '',
       base: perfume.notes?.base || '',
     });
+    setWishlist(perfume.wishlist || false); // NUEVO: cargar wishlist si existe
     setSuggestions([]);
   };
 
@@ -55,13 +57,14 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
     await fetch('/api/perfumes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: query, brand, notes, type, size }),
+      body: JSON.stringify({ name: query, brand, notes, type, size, wishlist }), // ENVÍO wishlist
     });
     setQuery('');
     setBrand('');
     setNotes({ top: '', middle: '', base: '' });
     setType('');
     setSize('');
+    setWishlist(false); // RESET checkbox
     setSuggestions([]);
     onPerfumeAdded();
     onClose();
@@ -139,6 +142,20 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
                 value={size}
                 onChange={(e) => setSize(Number(e.target.value))}
               />
+
+              {/* Checkbox Wishlist */}
+              <div className="form-check mb-3">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="wishlistCheck"
+                  checked={wishlist}
+                  onChange={(e) => setWishlist(e.target.checked)}
+                />
+                <label className="form-check-label" htmlFor="wishlistCheck">
+                  Añadir a Wishlist
+                </label>
+              </div>
 
               <button type="submit" className="btn btn-primary">
                 Guardar
