@@ -7,7 +7,9 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
+  // Carga perfumes guardados
   const fetchPerfumes = async () => {
     const res = await fetch('/api/perfumes');
     const data = await res.json();
@@ -18,6 +20,7 @@ export default function Home() {
     fetchPerfumes();
   }, []);
 
+  // Submit para guardar perfume
   const handleSubmit = async (e) => {
     e.preventDefault();
     await fetch('/api/perfumes', {
@@ -28,9 +31,21 @@ export default function Home() {
     setQuery('');
     setSuggestions([]);
     setShowSuggestions(false);
+    setShowModal(false);
     fetchPerfumes();
   };
 
+  // Borrar perfume
+  const handleDelete = async (id) => {
+    await fetch('/api/perfumes', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    fetchPerfumes();
+  };
+
+  // Traer sugerencias autocomplete
   const fetchAutocomplete = async (input) => {
     if (input.length < 2) {
       setSuggestions([]);
@@ -45,7 +60,6 @@ export default function Home() {
     });
 
     const data = await res.json();
-    console.log('Datos recibidos:', data);
 
     if (data.perfumes && data.perfumes.length > 0) {
       setSuggestions(data.perfumes);
@@ -79,48 +93,99 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
+
       <main className="container py-5" style={{ backgroundColor: '#FDF0D5' }}>
         <h1 className="mb-4">La colección de perfumes de Tomi</h1>
 
-        <form className="row g-3 mb-4" onSubmit={handleSubmit} autoComplete="off">
-          <div className="col-md-6 position-relative">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Buscar por perfume, marca o notas"
-              value={query}
-              onChange={handleQueryChange}
-              required
-              onFocus={() => query.length >= 2 && setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-            />
-            {showSuggestions && suggestions.length > 0 && (
-              <ul
-                className="list-group position-absolute w-100"
-                style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}
-              >
-                {suggestions.map((perfume, index) => (
-                  <li
-                    key={index}
-                    className="list-group-item list-group-item-action"
-                    onMouseDown={() => handleSuggestionClick(perfume)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <strong>{perfume.perfume}</strong> - {perfume.brand} <br />
-                    <small>{perfume.notes}</small>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+        {/* Botón para abrir modal */}
+        <button
+          className="btn btn-primary mb-4"
+          onClick={() => setShowModal(true)}
+        >
+          Agregar Perfume
+        </button>
 
-          <div className="col-12">
-            <button type="submit" className="btn btn-primary">
-              Agregar Perfume
-            </button>
+        {/* Modal */}
+        {showModal && (
+          <div
+            className="modal fade show d-block"
+            tabIndex="-1"
+            role="dialog"
+            style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+            onClick={() => setShowModal(false)} // Cierra modal si clickeás afuera
+          >
+            <div
+              className="modal-dialog"
+              role="document"
+              onClick={(e) => e.stopPropagation()} // Evita cerrar modal al click dentro
+            >
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Agregar Perfume</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setShowModal(false)}
+                  ></button>
+                </div>
+                <form onSubmit={handleSubmit} autoComplete="off">
+                  <div className="modal-body position-relative">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar por perfume, marca o notas"
+                      value={query}
+                      onChange={handleQueryChange}
+                      required
+                      onFocus={() => query.length >= 2 && setShowSuggestions(true)}
+                      onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                      autoFocus
+                    />
+                    {showSuggestions && suggestions.length > 0 && (
+                      <ul
+                        className="list-group position-absolute w-100"
+                        style={{
+                          zIndex: 1050,
+                          maxHeight: '200px',
+                          overflowY: 'auto',
+                          top: '100%',
+                          left: 0,
+                        }}
+                      >
+                        {suggestions.map((perfume, index) => (
+                          <li
+                            key={index}
+                            className="list-group-item list-group-item-action"
+                            onMouseDown={() => handleSuggestionClick(perfume)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            <strong>{perfume.perfume}</strong> - {perfume.brand} <br />
+                            <small>{perfume.notes}</small>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <div className="modal-footer">
+                    <button type="submit" className="btn btn-primary">
+                      Guardar
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => setShowModal(false)}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-        </form>
+        )}
 
+        {/* Lista de perfumes */}
         {perfumes.length === 0 && <p>No hay perfumes guardados aún.</p>}
 
         <div className="row">
