@@ -83,19 +83,19 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
           <div className="mb-2">
             {perfume.notes?.top && (
               <div className="d-flex align-items-center mb-1">
-                <img src="/icons/top.ico" alt="Top" style={{ width: '16px', marginRight: '6px' }} />
+                <img src="/icons/top.svg" alt="Top" style={{ width: '16px', marginRight: '6px' }} />
                 <span><strong>Top:</strong> {perfume.notes.top}</span>
               </div>
             )}
             {perfume.notes?.middle && (
               <div className="d-flex align-items-center mb-1">
-                <img src="/icons/middle.ico" alt="Middle" style={{ width: '16px', marginRight: '6px' }} />
+                <img src="/icons/middle.svg" alt="Middle" style={{ width: '16px', marginRight: '6px' }} />
                 <span><strong>Middle:</strong> {perfume.notes.middle}</span>
               </div>
             )}
             {perfume.notes?.base && (
               <div className="d-flex align-items-center">
-                <img src="/icons/base.ico" alt="Base" style={{ width: '16px', marginRight: '6px' }} />
+                <img src="/icons/base.svg" alt="Base" style={{ width: '16px', marginRight: '6px' }} />
                 <span><strong>Base:</strong> {perfume.notes.base}</span>
               </div>
             )}
