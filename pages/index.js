@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import SearchModal from '../components/SearchModal';
+import PerfumeCard from '../components/PerfumeCard'; // Importa acá
 
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
@@ -51,28 +52,7 @@ export default function Home() {
 
         <div className="row">
           {perfumes.map((perfume) => (
-            <div key={perfume.id} className="col-md-4 mb-4">
-              <div className="card h-100 shadow-sm">
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{perfume.name}</h5>
-                  <p className="card-text mb-1">
-                    <strong>Marca:</strong> {perfume.brand}
-                  </p>
-                  <p className="card-text mb-3">
-                    {perfume.notes?.top && <>Top: {perfume.notes.top}<br /></>}
-                    {perfume.notes?.middle && <>Middle: {perfume.notes.middle}<br /></>}
-                    {perfume.notes?.base && <>Base: {perfume.notes.base}</>}
-                  </p>
-                  <button
-                    className="btn mt-auto"
-                    style={{ backgroundColor: '#c1121f', color: 'white' }}
-                    onClick={() => handleDelete(perfume.id)}
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              </div>
-            </div>
+            <PerfumeCard key={perfume.id} perfume={perfume} onDelete={handleDelete} />
           ))}
         </div>
       </main>
