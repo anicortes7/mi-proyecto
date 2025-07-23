@@ -49,9 +49,8 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
 
         <div className="card-body d-flex flex-column">
           <h5 className="card-title">{perfume.name}</h5>
-          <p className="card-text mb-1">
-            <strong>Marca:</strong> {perfume.brand}
-          </p>
+          <p className="card-text mb-1">{perfume.brand}</p>
+
           <p className="card-text mb-1">
             {perfume.notes?.top && (
               <>
