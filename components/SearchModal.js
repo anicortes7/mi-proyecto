@@ -48,7 +48,7 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
       middle: perfume.notes?.middle || '',
       base: perfume.notes?.base || '',
     });
-    setWishlist(perfume.wishlist || false); // NUEVO: cargar wishlist si existe
+    setWishlist(perfume.wishlist || false); // cargar wishlist si existe
     setSuggestions([]);
   };
 
@@ -57,14 +57,14 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
     await fetch('/api/perfumes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: query, brand, notes, type, size, wishlist }), // ENVÍO wishlist
+      body: JSON.stringify({ name: query, brand, notes, type, size, wishlist }), // envío wishlist
     });
     setQuery('');
     setBrand('');
     setNotes({ top: '', middle: '', base: '' });
     setType('');
     setSize('');
-    setWishlist(false); // RESET checkbox
+    setWishlist(false); // reset checkbox
     setSuggestions([]);
     onPerfumeAdded();
     onClose();
