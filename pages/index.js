@@ -27,6 +27,15 @@ export default function Home() {
     fetchPerfumes();
   };
 
+  const moveToCollection = async (id) => {
+    await fetch('/api/perfumes', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, wishlist: false }),
+    });
+    fetchPerfumes();
+  };
+
   const collection = perfumes.filter((p) => !p.wishlist);
   const wishlist = perfumes.filter((p) => p.wishlist);
 
@@ -99,6 +108,7 @@ export default function Home() {
                   perfume={perfume}
                   onDelete={handleDelete}
                   onUpdated={fetchPerfumes}
+                  onMoveToCollection={moveToCollection}
                 />
               ))}
             </div>

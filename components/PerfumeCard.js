@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
+export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToCollection }) {
   const [showEdit, setShowEdit] = useState(false);
   const [newType, setNewType] = useState(perfume.type || '');
   const [newSize, setNewSize] = useState(perfume.size || '');
@@ -87,20 +87,31 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
             ))}
           </div>
 
-          <div className="mt-auto d-flex justify-content-between">
-            <button
-              className="btn btn-sm btn-outline-secondary"
-              onClick={() => setShowEdit(true)}
-            >
-              Editar
-            </button>
-            <button
-              className="btn btn-sm"
-              style={{ backgroundColor: '#c1121f', color: 'white' }}
-              onClick={() => onDelete(perfume.id)}
-            >
-              Eliminar
-            </button>
+          <div className="mt-auto d-flex flex-column gap-2">
+            <div className="d-flex justify-content-between">
+              <button
+                className="btn btn-sm btn-outline-secondary"
+                onClick={() => setShowEdit(true)}
+              >
+                Editar
+              </button>
+              <button
+                className="btn btn-sm"
+                style={{ backgroundColor: '#c1121f', color: 'white' }}
+                onClick={() => onDelete(perfume.id)}
+              >
+                Eliminar
+              </button>
+            </div>
+
+            {perfume.wishlist && onMoveToCollection && (
+              <button
+                className="btn btn-sm btn-success"
+                onClick={() => onMoveToCollection(perfume.id)}
+              >
+                Mover a Colección
+              </button>
+            )}
           </div>
         </div>
       </div>
