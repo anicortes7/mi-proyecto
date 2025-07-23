@@ -10,11 +10,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
     await fetch('/api/perfumes', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id: perfume.id,
-        type: newType,
-        size: newSize
-      }),
+      body: JSON.stringify({ id: perfume.id, type: newType, size: newSize }),
     });
     setShowEdit(false);
     onUpdated();
@@ -32,7 +28,16 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
 
   return (
     <div className="col-md-4 mb-4">
-      <div className="card h-100 shadow-sm">
+      <div className="card h-100 shadow-sm position-relative">
+        {perfume.type && (
+          <span
+            className="badge bg-primary position-absolute"
+            style={{ top: '10px', right: '10px' }}
+          >
+            {perfume.type}
+          </span>
+        )}
+
         <div className="card-body d-flex flex-column">
           <h5 className="card-title">{perfume.name}</h5>
           <p className="card-text mb-1">
@@ -41,12 +46,14 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
           <p className="card-text mb-1">
             {perfume.notes?.top && (
               <>
-                <strong>Top:</strong> {perfume.notes.top}<br />
+                <strong>Top:</strong> {perfume.notes.top}
+                <br />
               </>
             )}
             {perfume.notes?.middle && (
               <>
-                <strong>Middle:</strong> {perfume.notes.middle}<br />
+                <strong>Middle:</strong> {perfume.notes.middle}
+                <br />
               </>
             )}
             {perfume.notes?.base && (
@@ -55,12 +62,6 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
               </>
             )}
           </p>
-
-          {perfume.type && (
-            <p className="card-text mb-1">
-              <strong>Tipo:</strong> {perfume.type}
-            </p>
-          )}
 
           {perfume.size && (
             <p className="card-text mb-1">
@@ -111,7 +112,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Editar Perfume</h5>
+                <h5 className="modal-title">Editar Detalles</h5>
                 <button
                   type="button"
                   className="btn-close"
@@ -137,8 +138,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
                   className="form-control mb-3"
                   placeholder="Tamaño (ml)"
                   value={newSize}
-                  onChange={(e) => setNewSize(e.target.value)}
-                  min="1"
+                  onChange={(e) => setNewSize(Number(e.target.value))}
                 />
 
                 <button className="btn btn-primary" onClick={handleUpdate}>
