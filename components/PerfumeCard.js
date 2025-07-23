@@ -32,9 +32,18 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
         {perfume.type && (
           <span
             className="badge bg-primary position-absolute"
-            style={{ top: '10px', right: '10px' }}
+            style={{ top: '10px', right: '10px', fontWeight: 'normal' }}
           >
             {perfume.type}
+          </span>
+        )}
+
+        {perfume.size && (
+          <span
+            className="badge bg-secondary position-absolute"
+            style={{ top: perfume.type ? '40px' : '10px', right: '10px', fontWeight: 'normal' }}
+          >
+            {perfume.size} ml
           </span>
         )}
 
@@ -62,12 +71,6 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
               </>
             )}
           </p>
-
-          {perfume.size && (
-            <p className="card-text mb-1">
-              <strong>Tamaño:</strong> {perfume.size} ml
-            </p>
-          )}
 
           <div className="mb-2">
             {[1, 2, 3, 4, 5].map((star) => (
