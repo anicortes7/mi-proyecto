@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
@@ -10,48 +10,37 @@ export default function handler(req, res) {
   const { query } = req.body;
 
   if (!query || query.length < 2) {
-    return res.status(400).json({ error: 'Query demasiado corto' });
+    return res.status(400).json({ error: 'Query muy corto' });
   }
 
   const filePath = path.join(process.cwd(), 'public', 'data', 'fra_cleaned.csv');
-  const csv = fs.readFileSync(filePath, 'utf8');
-  const parsed = Papa.parse(csv, { header: true });
+  const file = fs.readFileSync(filePath, 'utf8');
 
-  const results = [];
+  const parsed = Papa.parse(file, { header: true }).data;
 
-  parsed.data.forEach((row) => {
-    const perfume = row.Perfume || '';
-    const brand = row.Brand || '';
-    const top = row.Top || '';
-    const middle = row.Middle || '';
-    const base = row.Base || '';
-
-    const notes = [top, middle, base].filter(Boolean).join(', ');
-
-    // Match simple: query contenido en perfume, brand o notes
+  const results = parsed.filter(row => {
+    const perfume = (row.Perfume || '').toLowerCase().replace(/-/g, ' ');
+    const brand = (row.Brand || '').toLowerCase();
+    const top = (row.Top || '').toLowerCase();
+    const middle = (row.Middle || '').toLowerCase();
+    const base = (row.Base || '').toLowerCase();
     const q = query.toLowerCase();
-    if (
-      perfume.toLowerCase().includes(q) ||
-      brand.toLowerCase().includes(q) ||
-      notes.toLowerCase().includes(q)
-    ) {
-      results.push({
-        name: formatString(perfume),
-        brand: formatString(brand),
-        notes: formatString(notes),
-      });
-    }
+
+    return (
+      perfume.includes(q) ||
+      brand.includes(q) ||
+      top.includes(q) ||
+      middle.includes(q) ||
+      base.includes(q)
+    );
   });
 
-  console.log('Resultados finales:', results);
+  // Formatear para devolver bonito
+  const formatted = results.map(row => ({
+    perfume: row.Perfume?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || '',
+    brand: row.Brand || '',
+    notes: [row.Top, row.Middle, row.Base].filter(Boolean).join(', '),
+  }));
 
-  res.status(200).json({ perfumes: results.slice(0, 10) }); // Limita a 10 sugerencias
-}
-
-function formatString(str) {
-  return str
-    .split('-')
-    .join(' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
-    .trim();
+  res.status(200).json({ perfumes: formatted });
 }

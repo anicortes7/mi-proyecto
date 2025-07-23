@@ -5,8 +5,6 @@ import debounce from 'lodash.debounce';
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
   const [query, setQuery] = useState('');
-  const [brand, setBrand] = useState('');
-  const [notes, setNotes] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -25,22 +23,11 @@ export default function Home() {
     await fetch('/api/perfumes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: query, brand, notes }),
+      body: JSON.stringify({ name: query }),
     });
     setQuery('');
-    setBrand('');
-    setNotes('');
     setSuggestions([]);
     setShowSuggestions(false);
-    fetchPerfumes();
-  };
-
-  const handleDelete = async (id) => {
-    await fetch('/api/perfumes', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
-    });
     fetchPerfumes();
   };
 
@@ -78,9 +65,7 @@ export default function Home() {
   };
 
   const handleSuggestionClick = (perfume) => {
-    setQuery(perfume.name || '');
-    setBrand(perfume.brand || '');
-    setNotes(perfume.notes || '');
+    setQuery(`${perfume.perfume} - ${perfume.brand}`);
     setSuggestions([]);
     setShowSuggestions(false);
   };
@@ -98,11 +83,11 @@ export default function Home() {
         <h1 className="mb-4">La colección de perfumes de Tomi</h1>
 
         <form className="row g-3 mb-4" onSubmit={handleSubmit} autoComplete="off">
-          <div className="col-md-4 position-relative">
+          <div className="col-md-6 position-relative">
             <input
               type="text"
               className="form-control"
-              placeholder="Perfume, marca o notas"
+              placeholder="Buscar por perfume, marca o notas"
               value={query}
               onChange={handleQueryChange}
               required
@@ -121,31 +106,12 @@ export default function Home() {
                     onMouseDown={() => handleSuggestionClick(perfume)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <strong>{perfume.name}</strong> - {perfume.brand}
+                    <strong>{perfume.perfume}</strong> - {perfume.brand} <br />
+                    <small>{perfume.notes}</small>
                   </li>
                 ))}
               </ul>
             )}
-          </div>
-
-          <div className="col-md-4">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Marca"
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
-            />
-          </div>
-
-          <div className="col-md-4">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Notas"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
           </div>
 
           <div className="col-12">
