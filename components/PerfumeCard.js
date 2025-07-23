@@ -36,6 +36,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
               top: '10px',
               right: '10px',
               fontWeight: 'normal',
+              zIndex: 1,
             }}
           >
             {perfume.type}
@@ -49,13 +50,14 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
               top: perfume.type ? '40px' : '10px',
               right: '10px',
               fontWeight: 'normal',
+              zIndex: 1,
             }}
           >
             {perfume.size} ml
           </span>
         )}
 
-        <div className="card-body d-flex flex-column">
+        <div className="card-body d-flex flex-column" style={{ paddingTop: '60px' }}>
           <h5 className="card-title">{perfume.name}</h5>
           <p className="card-text mb-1">{perfume.brand}</p>
 
