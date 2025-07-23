@@ -43,9 +43,9 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
     setQuery(perfume.perfume || '');
     setBrand(perfume.brand || '');
     setNotes({
-      top: perfume.notes.top || '',
-      middle: perfume.notes.middle || '',
-      base: perfume.notes.base || '',
+      top: perfume.notes?.top || '',
+      middle: perfume.notes?.middle || '',
+      base: perfume.notes?.base || '',
     });
     setSuggestions([]);
   };
@@ -55,13 +55,7 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
     await fetch('/api/perfumes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: query,
-        brand,
-        notes,
-        type,
-        size: size ? parseInt(size) : null, // asegurarse que sea número
-      }),
+      body: JSON.stringify({ name: query, brand, notes, type, size }),
     });
     setQuery('');
     setBrand('');
@@ -117,42 +111,34 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
                 )}
               </div>
 
-              <div className="mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Marca"
-                  value={brand}
-                  onChange={(e) => setBrand(e.target.value)}
-                />
-              </div>
+              {brand && (
+                <div className="mb-3">
+                  <p className="mb-0">
+                    <strong>Marca:</strong> {brand}
+                  </p>
+                </div>
+              )}
 
-              <div className="mb-3">
-                <label className="form-label">Tipo</label>
-                <select
-                  className="form-select"
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                >
-                  <option value="">Seleccionar tipo</option>
-                  <option value="EDT">Eau de Toilette (EDT)</option>
-                  <option value="EDP">Eau de Parfum (EDP)</option>
-                  <option value="Parfum">Parfum</option>
-                  <option value="Cologne">Cologne</option>
-                  <option value="Mist">Body Mist</option>
-                </select>
-              </div>
+              <select
+                className="form-select mb-3"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+              >
+                <option value="">Seleccionar tipo</option>
+                <option value="EDT">Eau de Toilette (EDT)</option>
+                <option value="EDP">Eau de Parfum (EDP)</option>
+                <option value="Parfum">Parfum</option>
+                <option value="Cologne">Cologne</option>
+                <option value="Mist">Body Mist</option>
+              </select>
 
-              <div className="mb-3">
-                <label className="form-label">Tamaño (ml)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  placeholder="Ej: 100"
-                  value={size}
-                  onChange={(e) => setSize(e.target.value)}
-                />
-              </div>
+              <input
+                type="number"
+                className="form-control mb-3"
+                placeholder="Tamaño (ml)"
+                value={size}
+                onChange={(e) => setSize(Number(e.target.value))}
+              />
 
               <button type="submit" className="btn btn-primary">
                 Guardar
