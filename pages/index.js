@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import SearchModal from '@/components/SearchModal';
+import SearchModal from '../components/SearchModal';
 
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
