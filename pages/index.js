@@ -48,7 +48,7 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-      <main className="container py-5" style={{ backgroundColor: '#FDF0D5' }}>
+      <main className="container py-5">
         <h1 className="mb-4">La colección de perfumes de Tomi</h1>
 
         <button className="btn btn-primary mb-4" onClick={() => setModalOpen(true)}>
