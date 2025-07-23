@@ -4,7 +4,7 @@
   --color-secondary: #336683;
   --color-accent: #4D81A0;
   --color-muted: #669BBC;
-  --color-text: #003049; /* o #333 */
+  --color-text: #003049;
 }
 
 @font-face {
@@ -14,21 +14,105 @@
   font-style: normal;
   font-display: swap;
 }
+
 body {
-  background-color: #FDF0D5;
+  background-color: var(--color-bg);
   margin: 0;
   font-family: 'Helvetica', Arial, sans-serif;
+  color: var(--color-text);
 }
-h1{
-    font-weight: 700; /* peso negrita dentro del rango */
+
+/* Títulos */
+h1 {
+  font-weight: 700;
 }
+
+/* Botones base */
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* Botón eliminar */
 .btn-delete {
   background-color: #c1121f;
   color: white;
-  border: none;
 }
 
 .btn-delete:hover {
-  background-color: #780000; /* un rojo más oscuro para hover */
-  color: white;
+  background-color: #780000;
+}
+
+/* Botón primario */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-secondary);
+}
+
+/* Botón secundario */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Tarjetas */
+.card {
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 1rem;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Inputs */
+input,
+select,
+textarea {
+  border: 1px solid var(--color-muted);
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-family: inherit;
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border: 1px solid var(--color-accent);
+  outline: none;
+}
+
+/* Modal content */
+.modal-content {
+  border-radius: 8px;
+}
+
+/* Wishlist badge (opcional) */
+.badge-wishlist {
+  background: var(--color-accent);
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
 }
