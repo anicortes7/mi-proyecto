@@ -78,9 +78,9 @@ export default function Home() {
   };
 
   const handleSuggestionClick = (perfume) => {
-    setQuery(perfume.perfume || '');
+    setQuery(perfume.name || '');
     setBrand(perfume.brand || '');
-    setNotes(perfume.notes?.join(', ') || '');
+    setNotes(perfume.notes || '');
     setSuggestions([]);
     setShowSuggestions(false);
   };
@@ -121,7 +121,7 @@ export default function Home() {
                     onMouseDown={() => handleSuggestionClick(perfume)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <strong>{perfume.perfume}</strong> - {perfume.brand}
+                    <strong>{perfume.name}</strong> - {perfume.brand}
                   </li>
                 ))}
               </ul>
