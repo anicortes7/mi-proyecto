@@ -1,3 +1,12 @@
+:root {
+  --color-bg: #FDF0D5;
+  --color-primary: #003049;
+  --color-secondary: #336683;
+  --color-accent: #4D81A0;
+  --color-muted: #669BBC;
+  --color-text: #003049; /* o #333 */
+}
+
 @font-face {
   font-family: 'Helvetica';
   src: url('/fonts/helvetica.woff2') format('woff2');
