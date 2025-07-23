@@ -5,6 +5,7 @@ import PerfumeCard from '../components/PerfumeCard';
 
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
+  const [activeTab, setActiveTab] = useState('collection');
   const [modalOpen, setModalOpen] = useState(false);
 
   const fetchPerfumes = async () => {
@@ -26,9 +27,8 @@ export default function Home() {
     fetchPerfumes();
   };
 
-  // Separar perfumes en wishlist y colección
-  const wishlistPerfumes = perfumes.filter(p => p.wishlist);
-  const collectionPerfumes = perfumes.filter(p => !p.wishlist);
+  const collection = perfumes.filter((p) => !p.wishlist);
+  const wishlist = perfumes.filter((p) => p.wishlist);
 
   return (
     <>
@@ -52,33 +52,32 @@ export default function Home() {
           onPerfumeAdded={fetchPerfumes}
         />
 
-        {/* Sección Wishlist */}
-        <section className="mb-5">
-          <h2>Wishlist</h2>
-          {wishlistPerfumes.length === 0 ? (
-            <p>No hay perfumes en la wishlist.</p>
-          ) : (
-            <div className="row">
-              {wishlistPerfumes.map((perfume) => (
-                <PerfumeCard
-                  key={perfume.id}
-                  perfume={perfume}
-                  onDelete={handleDelete}
-                  onUpdated={fetchPerfumes}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+        {/* Tabs */}
+        <ul className="nav nav-tabs mb-4">
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === 'collection' ? 'active' : ''}`}
+              onClick={() => setActiveTab('collection')}
+            >
+              Mi Colección
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === 'wishlist' ? 'active' : ''}`}
+              onClick={() => setActiveTab('wishlist')}
+            >
+              Mi Wishlist
+            </button>
+          </li>
+        </ul>
 
-        {/* Sección Colección */}
-        <section>
-          <h2>Perfumes en la colección</h2>
-          {collectionPerfumes.length === 0 ? (
-            <p>No hay perfumes guardados aún.</p>
-          ) : (
+        {/* Contenido */}
+        {activeTab === 'collection' && (
+          <>
+            {collection.length === 0 && <p>No hay perfumes en tu colección aún.</p>}
             <div className="row">
-              {collectionPerfumes.map((perfume) => (
+              {collection.map((perfume) => (
                 <PerfumeCard
                   key={perfume.id}
                   perfume={perfume}
@@ -87,8 +86,24 @@ export default function Home() {
                 />
               ))}
             </div>
-          )}
-        </section>
+          </>
+        )}
+
+        {activeTab === 'wishlist' && (
+          <>
+            {wishlist.length === 0 && <p>No hay perfumes en tu wishlist aún.</p>}
+            <div className="row">
+              {wishlist.map((perfume) => (
+                <PerfumeCard
+                  key={perfume.id}
+                  perfume={perfume}
+                  onDelete={handleDelete}
+                  onUpdated={fetchPerfumes}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </main>
     </>
   );
