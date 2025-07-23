@@ -9,8 +9,9 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.42.3",
+    "csv-parser": "^3.2.0",
     "lodash.debounce": "^4.0.8",
-    "next": "14.2.3",
+    "next": "^14.2.30",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   }
