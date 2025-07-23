@@ -1,4 +1,19 @@
-export default function PerfumeCard({ perfume, onDelete }) {
+import { useState } from 'react';
+
+export default function PerfumeCard({ perfume, onDelete, onUpdated }) {
+  const [showEdit, setShowEdit] = useState(false);
+  const [newType, setNewType] = useState(perfume.type || '');
+
+  const handleUpdate = async () => {
+    await fetch('/api/perfumes', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: perfume.id, type: newType }),
+    });
+    setShowEdit(false);
+    onUpdated(); // Recarga perfumes
+  };
+
   return (
     <div className="col-md-4 mb-4">
       <div className="card h-100 shadow-sm">
@@ -7,7 +22,7 @@ export default function PerfumeCard({ perfume, onDelete }) {
           <p className="card-text mb-1">
             <strong>Marca:</strong> {perfume.brand}
           </p>
-          <p className="card-text mb-3">
+          <p className="card-text mb-1">
             {perfume.notes?.top && (
               <>
                 <strong>Top:</strong> {perfume.notes.top}<br />
@@ -24,15 +39,69 @@ export default function PerfumeCard({ perfume, onDelete }) {
               </>
             )}
           </p>
-          <button
-            className="btn mt-auto"
-            style={{ backgroundColor: '#c1121f', color: 'white' }}
-            onClick={() => onDelete(perfume.id)}
-          >
-            Eliminar
-          </button>
+          {perfume.type && (
+            <p className="card-text mb-1">
+              <strong>Tipo:</strong> {perfume.type}
+            </p>
+          )}
+          <div className="mt-auto d-flex justify-content-between">
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              onClick={() => setShowEdit(true)}
+            >
+              Editar
+            </button>
+            <button
+              className="btn btn-sm"
+              style={{ backgroundColor: '#c1121f', color: 'white' }}
+              onClick={() => onDelete(perfume.id)}
+            >
+              Eliminar
+            </button>
+          </div>
         </div>
       </div>
+
+      {showEdit && (
+        <div
+          className="modal show d-block"
+          tabIndex="-1"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Editar Tipo</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowEdit(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <select
+                  className="form-select mb-3"
+                  value={newType}
+                  onChange={(e) => setNewType(e.target.value)}
+                >
+                  <option value="">Seleccionar tipo</option>
+                  <option value="EDT">Eau de Toilette (EDT)</option>
+                  <option value="EDP">Eau de Parfum (EDP)</option>
+                  <option value="Parfum">Parfum</option>
+                  <option value="Cologne">Cologne</option>
+                  <option value="Mist">Body Mist</option>
+                </select>
+                <button
+                  className="btn btn-primary"
+                  onClick={handleUpdate}
+                >
+                  Guardar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import SearchModal from '../components/SearchModal';
-import PerfumeCard from '../components/PerfumeCard'; // Importa acá
+import PerfumeCard from '../components/PerfumeCard';
 
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
@@ -52,7 +52,12 @@ export default function Home() {
 
         <div className="row">
           {perfumes.map((perfume) => (
-            <PerfumeCard key={perfume.id} perfume={perfume} onDelete={handleDelete} />
+            <PerfumeCard
+              key={perfume.id}
+              perfume={perfume}
+              onDelete={handleDelete}
+              onUpdated={fetchPerfumes} // ✅ clave para refrescar después de editar tipo
+            />
           ))}
         </div>
       </main>
