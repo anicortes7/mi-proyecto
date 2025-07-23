@@ -6,8 +6,8 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
   const [brand, setBrand] = useState('');
   const [notes, setNotes] = useState({ top: '', middle: '', base: '' });
   const [type, setType] = useState('');
-  const [size, setSize] = useState('');
-  const [wishlist, setWishlist] = useState(false); // NUEVO
+  const [size, setSize] = useState(undefined);
+  const [wishlist, setWishlist] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
 
   const fetchAutocomplete = async (input) => {
@@ -48,7 +48,7 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
       middle: perfume.notes?.middle || '',
       base: perfume.notes?.base || '',
     });
-    setWishlist(perfume.wishlist || false); // cargar wishlist si existe
+    setWishlist(perfume.wishlist || false);
     setSuggestions([]);
   };
 
@@ -57,14 +57,14 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
     await fetch('/api/perfumes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: query, brand, notes, type, size, wishlist }), // envío wishlist
+      body: JSON.stringify({ name: query, brand, notes, type, size, wishlist }),
     });
     setQuery('');
     setBrand('');
     setNotes({ top: '', middle: '', base: '' });
     setType('');
-    setSize('');
-    setWishlist(false); // reset checkbox
+    setSize(undefined);
+    setWishlist(false);
     setSuggestions([]);
     onPerfumeAdded();
     onClose();
@@ -139,8 +139,12 @@ export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
                 type="number"
                 className="form-control mb-3"
                 placeholder="Tamaño (ml)"
-                value={size}
-                onChange={(e) => setSize(Number(e.target.value))}
+                value={size || ''}
+                onChange={(e) =>
+                  e.target.value === ''
+                    ? setSize(undefined)
+                    : setSize(Number(e.target.value))
+                }
               />
 
               {/* Checkbox Wishlist */}
