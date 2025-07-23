@@ -4,7 +4,7 @@ import SearchModal from '../components/SearchModal';
 
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const fetchPerfumes = async () => {
     const res = await fetch('/api/perfumes');
@@ -15,15 +15,6 @@ export default function Home() {
   useEffect(() => {
     fetchPerfumes();
   }, []);
-
-  const handleAddPerfume = async ({ name, brand, notes }) => {
-    await fetch('/api/perfumes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, brand, notes }),
-    });
-    fetchPerfumes();
-  };
 
   const handleDelete = async (id) => {
     await fetch('/api/perfumes', {
@@ -46,17 +37,14 @@ export default function Home() {
       <main className="container py-5" style={{ backgroundColor: '#FDF0D5' }}>
         <h1 className="mb-4">La colección de perfumes de Tomi</h1>
 
-        <button
-          className="btn btn-primary mb-4"
-          onClick={() => setShowModal(true)}
-        >
+        <button className="btn btn-primary mb-4" onClick={() => setModalOpen(true)}>
           Agregar Perfume
         </button>
 
         <SearchModal
-          show={showModal}
-          handleClose={() => setShowModal(false)}
-          handleAddPerfume={handleAddPerfume}
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onPerfumeAdded={fetchPerfumes}
         />
 
         {perfumes.length === 0 && <p>No hay perfumes guardados aún.</p>}
@@ -71,7 +59,9 @@ export default function Home() {
                     <strong>Marca:</strong> {perfume.brand}
                   </p>
                   <p className="card-text mb-3">
-                    <strong>Notas:</strong> {perfume.notes || '-'}
+                    {perfume.notes?.top && <>Top: {perfume.notes.top}<br /></>}
+                    {perfume.notes?.middle && <>Middle: {perfume.notes.middle}<br /></>}
+                    {perfume.notes?.base && <>Base: {perfume.notes.base}</>}
                   </p>
                   <button
                     className="btn mt-auto"

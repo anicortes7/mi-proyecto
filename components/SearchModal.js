@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react';
 import debounce from 'lodash.debounce';
 
-export default function SearchModal({ show, handleClose, handleAddPerfume }) {
+export default function SearchModal({ isOpen, onClose, onPerfumeAdded }) {
   const [query, setQuery] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
   const [brand, setBrand] = useState('');
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState({ top: '', middle: '', base: '' });
+  const [suggestions, setSuggestions] = useState([]);
 
   const fetchAutocomplete = async (input) => {
     if (input.length < 2) {
@@ -40,71 +40,78 @@ export default function SearchModal({ show, handleClose, handleAddPerfume }) {
   const handleSuggestionClick = (perfume) => {
     setQuery(perfume.perfume || '');
     setBrand(perfume.brand || '');
-    setNotes(perfume.notes || '');
+    setNotes({
+      top: perfume.notes.top || '',
+      middle: perfume.notes.middle || '',
+      base: perfume.notes.base || '',
+    });
     setSuggestions([]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    handleAddPerfume({
-      name: query,
-      brand: brand,
-      notes: notes,
+    await fetch('/api/perfumes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: query, brand, notes }),
     });
     setQuery('');
     setBrand('');
-    setNotes('');
-    handleClose();
+    setNotes({ top: '', middle: '', base: '' });
+    setSuggestions([]);
+    onPerfumeAdded();
+    onClose();
   };
 
-  if (!show) return null;
+  if (!isOpen) return null;
 
   return (
     <div
-      className="modal d-block"
+      className="modal show d-block"
       tabIndex="-1"
-      style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
     >
       <div className="modal-dialog">
         <div className="modal-content">
-          <form onSubmit={handleSubmit} autoComplete="off">
-            <div className="modal-header">
-              <h5 className="modal-title">Agregar Perfume</h5>
-              <button type="button" className="btn-close" onClick={handleClose}></button>
-            </div>
-            <div className="modal-body">
-              <input
-                type="text"
-                className="form-control mb-2"
-                placeholder="Perfume, marca o notas"
-                value={query}
-                onChange={handleQueryChange}
-                required
-              />
-              {suggestions.length > 0 && (
-                <ul className="list-group">
-                  {suggestions.map((perfume, index) => (
-                    <li
-                      key={index}
-                      className="list-group-item list-group-item-action"
-                      onClick={() => handleSuggestionClick(perfume)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <strong>{perfume.perfume}</strong> - {perfume.brand}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className="modal-footer">
+          <div className="modal-header">
+            <h5 className="modal-title">Agregar Perfume</h5>
+            <button type="button" className="btn-close" onClick={onClose}></button>
+          </div>
+          <div className="modal-body">
+            <form onSubmit={handleSubmit} autoComplete="off">
+              <div className="mb-3 position-relative">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Perfume, marca o notas"
+                  value={query}
+                  onChange={handleQueryChange}
+                  required
+                />
+                {suggestions.length > 0 && (
+                  <ul
+                    className="list-group position-absolute w-100"
+                    style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}
+                  >
+                    {suggestions.map((perfume, index) => (
+                      <li
+                        key={index}
+                        className="list-group-item list-group-item-action"
+                        onMouseDown={() => handleSuggestionClick(perfume)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <strong>{perfume.perfume}</strong> - {perfume.brand}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
               <button type="submit" className="btn btn-primary">
                 Guardar
               </button>
-              <button type="button" className="btn btn-secondary" onClick={handleClose}>
-                Cancelar
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>

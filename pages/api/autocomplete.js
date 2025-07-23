@@ -2,13 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 
-// Función para formatear slugs como "marca-ejemplo" a "Marca Ejemplo"
-function formatSlugToTitle(slug) {
-  return slug
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (l) => l.toUpperCase());
-}
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
@@ -27,7 +20,7 @@ export default async function handler(req, res) {
 
   const results = parsed.filter(row => {
     const perfume = (row.Perfume || '').toLowerCase().replace(/-/g, ' ');
-    const brand = (row.Brand || '').toLowerCase();
+    const brand = (row.Brand || '').toLowerCase().replace(/-/g, ' ');
     const top = (row.Top || '').toLowerCase();
     const middle = (row.Middle || '').toLowerCase();
     const base = (row.Base || '').toLowerCase();
@@ -42,11 +35,14 @@ export default async function handler(req, res) {
     );
   });
 
-  // Formatear para devolver bonito
   const formatted = results.map(row => ({
     perfume: row.Perfume?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || '',
-    brand: formatSlugToTitle(row.Brand || ''),
-    notes: [row.Top, row.Middle, row.Base].filter(Boolean).join(', '),
+    brand: row.Brand?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || '',
+    notes: {
+      top: row.Top || '',
+      middle: row.Middle || '',
+      base: row.Base || '',
+    },
   }));
 
   res.status(200).json({ perfumes: formatted });
