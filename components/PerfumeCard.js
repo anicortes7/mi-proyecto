@@ -28,37 +28,38 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
   return (
     <div className="col-md-4 mb-4">
-      <div className="card h-100 shadow-sm position-relative">
-        {perfume.type && (
-          <span
-            className="badge position-absolute"
-            style={{
-              top: '10px',
-              right: '10px',
-              fontWeight: 'normal',
-              zIndex: 1,
-            }}
-          >
-            {perfume.type}
-          </span>
-        )}
+      <div className="card h-100 shadow-sm">
+        <div className="card-body d-flex flex-column">
+          <div className="d-flex align-items-center justify-content-between mb-2">
+            <h5 className="card-title mb-0">{perfume.name}</h5>
+            <div className="d-flex flex-column align-items-end">
+              {perfume.type && (
+                <span
+                  className="badge mb-1"
+                  style={{
+                    backgroundColor: 'var(--color-primary)',
+                    color: '#fff',
+                    fontWeight: 'normal',
+                  }}
+                >
+                  {perfume.type}
+                </span>
+              )}
+              {perfume.size && (
+                <span
+                  className="badge"
+                  style={{
+                    backgroundColor: 'var(--color-secondary)',
+                    color: '#fff',
+                    fontWeight: 'normal',
+                  }}
+                >
+                  {perfume.size} ml
+                </span>
+              )}
+            </div>
+          </div>
 
-        {perfume.size && (
-          <span
-            className="badge position-absolute"
-            style={{
-              top: perfume.type ? '40px' : '10px',
-              right: '10px',
-              fontWeight: 'normal',
-              zIndex: 1,
-            }}
-          >
-            {perfume.size} ml
-          </span>
-        )}
-
-        <div className="card-body d-flex flex-column" style={{ paddingTop: '60px' }}>
-          <h5 className="card-title">{perfume.name}</h5>
           <p className="card-text mb-1">{perfume.brand}</p>
 
           <p className="card-text mb-1">
