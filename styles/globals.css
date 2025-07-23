@@ -5,6 +5,7 @@
   --color-accent: #4D81A0;
   --color-muted: #669BBC;
   --color-text: #003049;
+  --color-accentlight: #FFFCF7;
 }
 
 @font-face {
@@ -75,7 +76,7 @@ button:hover {
 /* Tarjetas */
 .card {
   border-radius: 8px;
-  background: var(--color-bg); /* acá el cambio */
+  background: var(--color-accentlight); 
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   padding: 1rem;
   transition: box-shadow 0.2s ease-in-out;
