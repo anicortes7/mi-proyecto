@@ -32,7 +32,8 @@ export default function handler(req, res) {
       const body = Buffer.concat(chunks).toString();
       try {
         const data = JSON.parse(body);
-        res.status(200).json({ perfumes: data || [] }); // envio el array completo
+        console.log('Datos parseados:', data);
+        res.status(200).json({ perfumes: data });
       } catch (e) {
         res.status(500).json({ error: 'Error parseando respuesta de la API' });
       }
