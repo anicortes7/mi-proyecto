@@ -8,9 +8,21 @@ export default function PerfumeCard({ perfume, onDelete }) {
             <strong>Marca:</strong> {perfume.brand}
           </p>
           <p className="card-text mb-3">
-            {perfume.notes?.top && <>Top: {perfume.notes.top}<br /></>}
-            {perfume.notes?.middle && <>Middle: {perfume.notes.middle}<br /></>}
-            {perfume.notes?.base && <>Base: {perfume.notes.base}</>}
+            {perfume.notes?.top && (
+              <>
+                <strong>Top:</strong> {perfume.notes.top}<br />
+              </>
+            )}
+            {perfume.notes?.middle && (
+              <>
+                <strong>Middle:</strong> {perfume.notes.middle}<br />
+              </>
+            )}
+            {perfume.notes?.base && (
+              <>
+                <strong>Base:</strong> {perfume.notes.base}
+              </>
+            )}
           </p>
           <button
             className="btn mt-auto"
