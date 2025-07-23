@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import SearchModal from '../components/SearchModal';
+import SearchModal from '@/components/SearchModal';
 
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
@@ -16,13 +16,12 @@ export default function Home() {
     fetchPerfumes();
   }, []);
 
-  const handleAddPerfume = async (name) => {
+  const handleAddPerfume = async ({ name, brand, notes }) => {
     await fetch('/api/perfumes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, brand, notes }),
     });
-    setShowModal(false);
     fetchPerfumes();
   };
 
@@ -44,18 +43,20 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-
       <main className="container py-5" style={{ backgroundColor: '#FDF0D5' }}>
         <h1 className="mb-4">La colección de perfumes de Tomi</h1>
 
-        <button className="btn btn-primary mb-4" onClick={() => setShowModal(true)}>
+        <button
+          className="btn btn-primary mb-4"
+          onClick={() => setShowModal(true)}
+        >
           Agregar Perfume
         </button>
 
         <SearchModal
           show={showModal}
-          onClose={() => setShowModal(false)}
-          onSave={handleAddPerfume}
+          handleClose={() => setShowModal(false)}
+          handleAddPerfume={handleAddPerfume}
         />
 
         {perfumes.length === 0 && <p>No hay perfumes guardados aún.</p>}
