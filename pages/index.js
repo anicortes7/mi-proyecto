@@ -5,13 +5,11 @@ import debounce from 'lodash.debounce';
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
   const [query, setQuery] = useState('');
-  const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
   const [notes, setNotes] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // Obtener perfumes guardados
   const fetchPerfumes = async () => {
     const res = await fetch('/api/perfumes');
     const data = await res.json();
@@ -22,16 +20,14 @@ export default function Home() {
     fetchPerfumes();
   }, []);
 
-  // Guardar nuevo perfume
   const handleSubmit = async (e) => {
     e.preventDefault();
     await fetch('/api/perfumes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, brand, notes }),
+      body: JSON.stringify({ name: query, brand, notes }),
     });
     setQuery('');
-    setName('');
     setBrand('');
     setNotes('');
     setSuggestions([]);
@@ -39,7 +35,6 @@ export default function Home() {
     fetchPerfumes();
   };
 
-  // Eliminar perfume
   const handleDelete = async (id) => {
     await fetch('/api/perfumes', {
       method: 'DELETE',
@@ -49,9 +44,8 @@ export default function Home() {
     fetchPerfumes();
   };
 
-  // Pedir sugerencias
-  const fetchAutocomplete = async (searchQuery) => {
-    if (searchQuery.length < 3) {
+  const fetchAutocomplete = async (input) => {
+    if (input.length < 2) {
       setSuggestions([]);
       setShowSuggestions(false);
       return;
@@ -60,11 +54,11 @@ export default function Home() {
     const res = await fetch('/api/autocomplete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: searchQuery }),
+      body: JSON.stringify({ query: input }),
     });
 
     const data = await res.json();
-    console.log('Datos recibidos del autocomplete:', data);
+    console.log('Datos recibidos:', data);
 
     if (data.perfumes && data.perfumes.length > 0) {
       setSuggestions(data.perfumes);
@@ -75,26 +69,21 @@ export default function Home() {
     }
   };
 
-  const debouncedAutocomplete = useCallback(debounce(fetchAutocomplete, 500), []);
+  const debouncedAutocomplete = useCallback(debounce(fetchAutocomplete, 300), []);
 
-  // Manejador del único input
   const handleQueryChange = (e) => {
-    const value = e.target.value;
-    setQuery(value);
-    debouncedAutocomplete(value);
+    const input = e.target.value;
+    setQuery(input);
+    debouncedAutocomplete(input);
   };
 
-  // Click en una sugerencia
   const handleSuggestionClick = (perfume) => {
-    setName(perfume.perfume || '');
+    setQuery(perfume.perfume || '');
     setBrand(perfume.brand || '');
-    setNotes(perfume.notes ? perfume.notes.join(', ') : '');
-    setQuery(`${perfume.perfume} ${perfume.brand}`);
+    setNotes(perfume.notes?.join(', ') || '');
     setSuggestions([]);
     setShowSuggestions(false);
   };
-
-  console.log('Sugerencias:', suggestions);
 
   return (
     <>
@@ -109,15 +98,15 @@ export default function Home() {
         <h1 className="mb-4">La colección de perfumes de Tomi</h1>
 
         <form className="row g-3 mb-4" onSubmit={handleSubmit} autoComplete="off">
-          <div className="col-md-12 position-relative">
+          <div className="col-md-4 position-relative">
             <input
               type="text"
               className="form-control"
-              placeholder="Buscá perfume, marca o notas"
+              placeholder="Perfume, marca o notas"
               value={query}
               onChange={handleQueryChange}
               required
-              onFocus={() => query.length >= 3 && setShowSuggestions(true)}
+              onFocus={() => query.length >= 2 && setShowSuggestions(true)}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
             />
             {showSuggestions && suggestions.length > 0 && (
@@ -125,9 +114,9 @@ export default function Home() {
                 className="list-group position-absolute w-100"
                 style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}
               >
-                {suggestions.map((perfume) => (
+                {suggestions.map((perfume, index) => (
                   <li
-                    key={perfume._id}
+                    key={index}
                     className="list-group-item list-group-item-action"
                     onMouseDown={() => handleSuggestionClick(perfume)}
                     style={{ cursor: 'pointer' }}
@@ -137,6 +126,26 @@ export default function Home() {
                 ))}
               </ul>
             )}
+          </div>
+
+          <div className="col-md-4">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Marca"
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-4">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Notas"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
           </div>
 
           <div className="col-12">
