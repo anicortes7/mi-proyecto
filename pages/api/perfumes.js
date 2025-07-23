@@ -13,11 +13,22 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const { name, brand, notes } = req.body;
+    const { name, brand, notes, type, size } = req.body;
+
+    const insertData = {
+      name,
+      brand,
+      notes,
+    };
+
+    if (type !== undefined) insertData.type = type;
+    if (size !== undefined) insertData.size = size;
+
     const { data, error } = await supabase
       .from('perfumes')
-      .insert([{ name, brand, notes }])
+      .insert([insertData])
       .select();
+
     if (error) return res.status(500).json({ error: error.message });
     res.status(201).json(data[0]);
   }
