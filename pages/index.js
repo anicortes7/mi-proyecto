@@ -52,7 +52,8 @@ export default function Home() {
         {/* Título + Botón en misma row */}
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h1 className="mb-0">La colección de perfumes de Tomi</h1>
-          <button className="btn btn-primary no-border" onClick={() => setModalOpen(true)}>
+          <button className="btn btn-primary no-border d-flex align-items-center gap-2" onClick={() => setModalOpen(true)}>
+            <img src="/icons/plus.svg" alt="Agregar" style={{ width: '20px', height: '20px' }} />
             Agregar Perfume
           </button>
         </div>
