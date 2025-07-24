@@ -1,25 +1,9 @@
 import { useState } from 'react';
+import CardModal from './CardModal';
 
 export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToCollection }) {
   const [showModal, setShowModal] = useState(false);
-  const [newType, setNewType] = useState(perfume.type || '');
-  const [newSize, setNewSize] = useState(perfume.size || '');
   const [rating, setRating] = useState(perfume.rating || 0);
-
-  const handleUpdate = async () => {
-    await fetch('/api/perfumes', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: perfume.id, type: newType, size: newSize }),
-    });
-    setShowModal(false);
-    onUpdated();
-  };
-
-  const handleDelete = async () => {
-    await onDelete(perfume.id);
-    setShowModal(false);
-  };
 
   const handleRating = async (newRating) => {
     setRating(newRating);
@@ -31,19 +15,10 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
     onUpdated();
   };
 
-  const capitalizeList = (text) => {
-    if (!text) return '';
-    return text
-      .split(',')
-      .map((part) => part.trim())
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(', ');
-  };
-
   return (
     <div className="col-md-4 mb-4">
       <div
-        className="card h-100 shadow-sm d-flex flex-column cursor-pointer"
+        className="card h-100 shadow-sm d-flex flex-column"
         style={{ cursor: 'pointer' }}
         onClick={() => setShowModal(true)}
       >
@@ -103,19 +78,19 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
             {perfume.notes?.top && (
               <div className="d-flex align-items-center mb-1">
                 <img src="/icons/top.svg" alt="Top" style={{ width: '16px', marginRight: '6px' }} />
-                <span><strong>Top:</strong> {capitalizeList(perfume.notes.top)}</span>
+                <span><strong>Top:</strong> {perfume.notes.top}</span>
               </div>
             )}
             {perfume.notes?.middle && (
               <div className="d-flex align-items-center mb-1">
                 <img src="/icons/middle.svg" alt="Middle" style={{ width: '16px', marginRight: '6px' }} />
-                <span><strong>Middle:</strong> {capitalizeList(perfume.notes.middle)}</span>
+                <span><strong>Middle:</strong> {perfume.notes.middle}</span>
               </div>
             )}
             {perfume.notes?.base && (
               <div className="d-flex align-items-center">
                 <img src="/icons/base.svg" alt="Base" style={{ width: '16px', marginRight: '6px' }} />
-                <span><strong>Base:</strong> {capitalizeList(perfume.notes.base)}</span>
+                <span><strong>Base:</strong> {perfume.notes.base}</span>
               </div>
             )}
           </div>
@@ -137,54 +112,12 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
       </div>
 
       {showModal && (
-        <div
-          className="modal show d-block"
-          tabIndex="-1"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">{perfume.name}</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setShowModal(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <p><strong>Marca:</strong> {perfume.brand}</p>
-                <p><strong>Tipo:</strong> {perfume.type}</p>
-                <p><strong>Tamaño:</strong> {perfume.size} ml</p>
-                <p><strong>Notas:</strong></p>
-                {perfume.notes?.top && (
-                  <p>🌿 <strong>Top:</strong> {capitalizeList(perfume.notes.top)}</p>
-                )}
-                {perfume.notes?.middle && (
-                  <p>🌸 <strong>Middle:</strong> {capitalizeList(perfume.notes.middle)}</p>
-                )}
-                {perfume.notes?.base && (
-                  <p>🌲 <strong>Base:</strong> {capitalizeList(perfume.notes.base)}</p>
-                )}
-
-                <div className="d-flex justify-content-end gap-3">
-                  <button
-                    onClick={handleUpdate}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                  >
-                    <img src="/icons/editar.svg" alt="Editar" style={{ width: '24px' }} />
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                  >
-                    <img src="/icons/eliminar.svg" alt="Eliminar" style={{ width: '24px' }} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CardModal
+          perfume={perfume}
+          onClose={() => setShowModal(false)}
+          onDelete={onDelete}
+          onUpdated={onUpdated}
+        />
       )}
     </div>
   );
