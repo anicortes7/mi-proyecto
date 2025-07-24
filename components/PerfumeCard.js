@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToCollection }) {
-  const [showEdit, setShowEdit] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [newType, setNewType] = useState(perfume.type || '');
   const [newSize, setNewSize] = useState(perfume.size || '');
   const [rating, setRating] = useState(perfume.rating || 0);
@@ -12,8 +12,13 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: perfume.id, type: newType, size: newSize }),
     });
-    setShowEdit(false);
+    setShowModal(false);
     onUpdated();
+  };
+
+  const handleDelete = async () => {
+    await onDelete(perfume.id);
+    setShowModal(false);
   };
 
   const handleRating = async (newRating) => {
@@ -37,7 +42,11 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
   return (
     <div className="col-md-4 mb-4">
-      <div className="card h-100 shadow-sm d-flex flex-column">
+      <div
+        className="card h-100 shadow-sm d-flex flex-column cursor-pointer"
+        style={{ cursor: 'pointer' }}
+        onClick={() => setShowModal(true)}
+      >
         <div className="card-body d-flex flex-column flex-grow-1 pb-2">
           <div className="d-flex align-items-center justify-content-between mb-2">
             <h5 className="card-title mb-0">{perfume.name}</h5>
@@ -75,7 +84,10 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
             {[1, 2, 3, 4, 5].map((star) => (
               <span
                 key={star}
-                onClick={() => handleRating(star)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRating(star);
+                }}
                 style={{
                   cursor: 'pointer',
                   color: star <= rating ? '#FFD700' : '#CCC',
@@ -108,27 +120,14 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
             )}
           </div>
 
-          <div className="mt-auto d-flex justify-content-end gap-2 pt-3">
-            <button
-              className="btn btn-sm btn-secondary"
-              style={{ color: 'var(--color-primary)', border: '1px solid var(--color-primary)' }}
-              onClick={() => setShowEdit(true)}
-            >
-              Editar
-            </button>
-            <button
-              className="btn btn-sm btn-delete"
-              onClick={() => onDelete(perfume.id)}
-            >
-              Eliminar
-            </button>
-          </div>
-
           {perfume.wishlist && onMoveToCollection && (
             <div className="mt-2 d-flex justify-content-end">
               <button
                 className="btn btn-sm btn-primary"
-                onClick={() => onMoveToCollection(perfume.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMoveToCollection(perfume.id);
+                }}
               >
                 Mover a Colección
               </button>
@@ -137,7 +136,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
         </div>
       </div>
 
-      {showEdit && (
+      {showModal && (
         <div
           className="modal show d-block"
           tabIndex="-1"
@@ -146,38 +145,42 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Editar Detalles</h5>
+                <h5 className="modal-title">{perfume.name}</h5>
                 <button
                   type="button"
                   className="btn-close"
-                  onClick={() => setShowEdit(false)}
+                  onClick={() => setShowModal(false)}
                 ></button>
               </div>
               <div className="modal-body">
-                <select
-                  className="form-select mb-3"
-                  value={newType}
-                  onChange={(e) => setNewType(e.target.value)}
-                >
-                  <option value="">Seleccionar tipo</option>
-                  <option value="EDT">Eau de Toilette (EDT)</option>
-                  <option value="EDP">Eau de Parfum (EDP)</option>
-                  <option value="Parfum">Parfum</option>
-                  <option value="Cologne">Cologne</option>
-                  <option value="Mist">Body Mist</option>
-                </select>
+                <p><strong>Marca:</strong> {perfume.brand}</p>
+                <p><strong>Tipo:</strong> {perfume.type}</p>
+                <p><strong>Tamaño:</strong> {perfume.size} ml</p>
+                <p><strong>Notas:</strong></p>
+                {perfume.notes?.top && (
+                  <p>🌿 <strong>Top:</strong> {capitalizeList(perfume.notes.top)}</p>
+                )}
+                {perfume.notes?.middle && (
+                  <p>🌸 <strong>Middle:</strong> {capitalizeList(perfume.notes.middle)}</p>
+                )}
+                {perfume.notes?.base && (
+                  <p>🌲 <strong>Base:</strong> {capitalizeList(perfume.notes.base)}</p>
+                )}
 
-                <input
-                  type="number"
-                  className="form-control mb-3"
-                  placeholder="Tamaño (ml)"
-                  value={newSize}
-                  onChange={(e) => setNewSize(Number(e.target.value))}
-                />
-
-                <button className="btn btn-primary" onClick={handleUpdate}>
-                  Guardar
-                </button>
+                <div className="d-flex justify-content-end gap-3">
+                  <button
+                    onClick={handleUpdate}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    <img src="/icons/editar.svg" alt="Editar" style={{ width: '24px' }} />
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    <img src="/icons/eliminar.svg" alt="Eliminar" style={{ width: '24px' }} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
