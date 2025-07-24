@@ -27,7 +27,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
   };
 
   return (
-    <div className="col-md-4 mb-4">
+    <div className="col-md-4 mb-1">
       <div className="card h-100 shadow-sm d-flex flex-column">
         <div className="card-body d-flex flex-column flex-grow-1">
           <div className="d-flex align-items-center justify-content-between mb-2">
