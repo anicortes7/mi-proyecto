@@ -156,7 +156,6 @@ textarea:focus {
   display: flex;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid var(--color-muted);
   background: var(--color-bg);
 }
 
