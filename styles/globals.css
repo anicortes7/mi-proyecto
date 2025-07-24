@@ -40,6 +40,7 @@ button:hover {
   opacity: 0.9;
 }
 
+/* Botón primario */
 .btn-primary {
   background-color: var(--color-primary);
   color: var(--color-accentlight);
@@ -49,6 +50,7 @@ button:hover {
   background-color: var(--color-secondary);
 }
 
+/* Botón secundario (Tabs) */
 .btn-secondary {
   background-color: transparent;
   color: var(--color-primary);
@@ -106,6 +108,7 @@ textarea:focus {
   font-size: 0.75rem;
 }
 
+/* Botón sin borde extra */
 .no-border {
   border: none !important;
 }
@@ -136,20 +139,21 @@ textarea:focus {
 }
 
 /* -----------------------------
-   TABS ANIMADAS CON INDICADOR
+   TABS WRAPPER AJUSTADO
 ------------------------------ */
 
+/* Wrapper exterior: 100% ancho, centrado */
 .tabs-wrapper {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
+/* Contenedor interior: 2px más chico */
 .tabs-custom {
   width: calc(100% - 2px);
   max-width: 100%;
   display: flex;
-  position: relative;
   border-radius: 8px;
   overflow: hidden;
   background: var(--color-bg);
@@ -163,8 +167,6 @@ textarea:focus {
   transition: background 0.2s;
   text-align: center;
   padding: 0.75rem 1rem;
-  position: relative;
-  z-index: 2;
 }
 
 .tab-custom.active {
@@ -177,32 +179,7 @@ textarea:focus {
   cursor: pointer;
 }
 
-/* Indicador animado */
-.tabs-custom.with-indicator {
-  position: relative;
-}
-
-.tab-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 3px;
-  background: var(--color-primary);
-  transition: transform 0.3s ease, width 0.3s ease;
-  z-index: 1;
-}
-
-.tabs-custom.with-indicator .tab-indicator.collection {
-  width: 50%;
-  transform: translateX(0%);
-}
-
-.tabs-custom.with-indicator .tab-indicator.wishlist {
-  width: 50%;
-  transform: translateX(100%);
-}
-
-/* Responsive */
+/* Responsive para pantallas chicas */
 @media (max-width: 768px) {
   .tabs-custom {
     width: calc(100% - 2px);
