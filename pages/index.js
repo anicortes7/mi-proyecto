@@ -61,7 +61,7 @@ export default function Home() {
               alt="Agregar"
               className="btn-add-icon"
             />
-            <span className="fw-bold">Agregar Perfume</span>
+            <span className="fw-bold fs-4">Agregar Perfume</span>
           </button>
         </div>
 
