@@ -26,6 +26,9 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
     onUpdated();
   };
 
+  const capitalize = (text) =>
+    text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
+
   return (
     <div className="col-md-4 mb-4">
       <div className="card h-100 shadow-sm d-flex flex-column">
@@ -62,7 +65,6 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
           <p className="card-text mb-1">{perfume.brand}</p>
 
-          {/* Rating entre marca y notas */}
           <div className="mb-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <span
@@ -79,29 +81,27 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
             ))}
           </div>
 
-          {/* Notas con iconos */}
           <div className="mb-3">
             {perfume.notes?.top && (
               <div className="d-flex align-items-center mb-1">
                 <img src="/icons/top.svg" alt="Top" style={{ width: '16px', marginRight: '6px' }} />
-                <span><strong>Top:</strong> {perfume.notes.top}</span>
+                <span><strong>Top:</strong> {capitalize(perfume.notes.top)}</span>
               </div>
             )}
             {perfume.notes?.middle && (
               <div className="d-flex align-items-center mb-1">
                 <img src="/icons/middle.svg" alt="Middle" style={{ width: '16px', marginRight: '6px' }} />
-                <span><strong>Middle:</strong> {perfume.notes.middle}</span>
+                <span><strong>Middle:</strong> {capitalize(perfume.notes.middle)}</span>
               </div>
             )}
             {perfume.notes?.base && (
               <div className="d-flex align-items-center">
                 <img src="/icons/base.svg" alt="Base" style={{ width: '16px', marginRight: '6px' }} />
-                <span><strong>Base:</strong> {perfume.notes.base}</span>
+                <span><strong>Base:</strong> {capitalize(perfume.notes.base)}</span>
               </div>
             )}
           </div>
 
-          {/* Botones */}
           <div className="mt-auto d-flex justify-content-end gap-2 pt-3">
             <button
               className="btn btn-sm btn-secondary"
