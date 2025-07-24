@@ -46,16 +46,25 @@ export default function CardModal({ perfume, onClose, onDelete, onUpdated }) {
             <p><strong>Tamaño:</strong> {perfume.size} ml</p>
 
             {perfume.notes?.top && (
-              <p>🌿 <strong>Top:</strong> {capitalizeList(perfume.notes.top)}</p>
+              <div className="d-flex align-items-center mb-1">
+                <img src="/icons/top.svg" alt="Top" style={{ width: '16px', marginRight: '6px' }} />
+                <span><strong>Top:</strong> {capitalizeList(perfume.notes.top)}</span>
+              </div>
             )}
             {perfume.notes?.middle && (
-              <p>🌸 <strong>Middle:</strong> {capitalizeList(perfume.notes.middle)}</p>
+              <div className="d-flex align-items-center mb-1">
+                <img src="/icons/middle.svg" alt="Middle" style={{ width: '16px', marginRight: '6px' }} />
+                <span><strong>Middle:</strong> {capitalizeList(perfume.notes.middle)}</span>
+              </div>
             )}
             {perfume.notes?.base && (
-              <p>🌲 <strong>Base:</strong> {capitalizeList(perfume.notes.base)}</p>
+              <div className="d-flex align-items-center">
+                <img src="/icons/base.svg" alt="Base" style={{ width: '16px', marginRight: '6px' }} />
+                <span><strong>Base:</strong> {capitalizeList(perfume.notes.base)}</span>
+              </div>
             )}
 
-            <div className="d-flex justify-content-end gap-3">
+            <div className="d-flex justify-content-end gap-3 mt-4">
               <button
                 onClick={handleUpdate}
                 style={{ background: 'none', border: 'none', cursor: 'pointer' }}
