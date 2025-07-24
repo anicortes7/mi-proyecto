@@ -142,3 +142,52 @@ textarea:focus {
 .no-border {
   border: none !important;
 }
+/* Tabs */
+.tabs-custom {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-muted);
+  background: var(--color-bg);
+}
+
+.tab-custom {
+  border: none;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: background 0.2s;
+}
+
+.tab-custom.active {
+  background: var(--color-accentlight);
+  color: var(--color-text);
+}
+
+.tab-custom:hover {
+  background: var(--color-muted);
+  cursor: pointer;
+}
+
+/* Botón Agregar Perfume */
+.btn-add-perfume {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-primary);
+  color: var(--color-accentlight);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+.btn-add-perfume:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-accentlight);
+}
+
+.btn-add-icon {
+  width: 20px;
+  height: 20px;
+}
