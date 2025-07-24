@@ -28,41 +28,24 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
 
   return (
     <div className="col-md-4 mb-4">
-      <div className="card h-100 shadow-sm d-flex flex-column">
-        <div className="card-body d-flex flex-column flex-grow-1">
-          <div className="d-flex align-items-center justify-content-between mb-2">
-            <h5 className="card-title mb-0">{perfume.name}</h5>
-            <div className="d-flex flex-column align-items-end">
-              {perfume.type && (
-                <span
-                  className="badge mb-1"
-                  style={{
-                    backgroundColor: 'var(--color-primary)',
-                    color: '#fff',
-                    fontWeight: 'normal',
-                  }}
-                >
-                  {perfume.type}
-                </span>
-              )}
-              {perfume.size && (
-                <span
-                  className="badge"
-                  style={{
-                    backgroundColor: 'var(--color-secondary)',
-                    color: '#fff',
-                    fontWeight: 'normal',
-                  }}
-                >
-                  {perfume.size} ml
-                </span>
-              )}
-            </div>
-          </div>
+      <div className="card bg-card h-100 shadow-sm position-relative">
+        <div className="position-absolute" style={{ top: '10px', right: '10px', display: 'flex', gap: '6px' }}>
+          {perfume.type && (
+            <span className="badge bg-primary" style={{ fontWeight: 'normal' }}>
+              {perfume.type}
+            </span>
+          )}
+          {perfume.size && (
+            <span className="badge bg-secondary" style={{ fontWeight: 'normal' }}>
+              {perfume.size} ml
+            </span>
+          )}
+        </div>
 
+        <div className="card-body d-flex flex-column">
+          <h5 className="card-title">{perfume.name}</h5>
           <p className="card-text mb-1">{perfume.brand}</p>
 
-          {/* Rating entre marca y notas */}
           <div className="mb-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <span
@@ -79,30 +62,28 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
             ))}
           </div>
 
-          {/* Notas con iconos */}
-          <div className="mb-2">
+          <p className="card-text mb-1">
             {perfume.notes?.top && (
               <div className="d-flex align-items-center mb-1">
                 <img src="/icons/top.svg" alt="Top" style={{ width: '16px', marginRight: '6px' }} />
-                <span><strong>Top:</strong> {perfume.notes.top}</span>
+                <strong>Top:</strong>&nbsp;{perfume.notes.top}
               </div>
             )}
             {perfume.notes?.middle && (
               <div className="d-flex align-items-center mb-1">
                 <img src="/icons/middle.svg" alt="Middle" style={{ width: '16px', marginRight: '6px' }} />
-                <span><strong>Middle:</strong> {perfume.notes.middle}</span>
+                <strong>Middle:</strong>&nbsp;{perfume.notes.middle}
               </div>
             )}
             {perfume.notes?.base && (
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center mb-1">
                 <img src="/icons/base.svg" alt="Base" style={{ width: '16px', marginRight: '6px' }} />
-                <span><strong>Base:</strong> {perfume.notes.base}</span>
+                <strong>Base:</strong>&nbsp;{perfume.notes.base}
               </div>
             )}
-          </div>
+          </p>
 
-          {/* Botones en esquina inferior derecha */}
-          <div className="mt-auto d-flex justify-content-end gap-2 pt-2">
+          <div className="mt-3 d-flex justify-content-end gap-2" style={{ marginTop: 'auto', paddingBottom: '0.5rem' }}>
             <button
               className="btn btn-sm btn-secondary"
               onClick={() => setShowEdit(true)}
@@ -118,14 +99,12 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
           </div>
 
           {perfume.wishlist && onMoveToCollection && (
-            <div className="mt-2 d-flex justify-content-end">
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={() => onMoveToCollection(perfume.id)}
-              >
-                Mover a Colección
-              </button>
-            </div>
+            <button
+              className="btn btn-sm btn-primary mt-2"
+              onClick={() => onMoveToCollection(perfume.id)}
+            >
+              Mover a Colección
+            </button>
           )}
         </div>
       </div>
