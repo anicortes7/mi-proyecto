@@ -71,23 +71,24 @@ export default function Home() {
           onPerfumeAdded={fetchPerfumes}
         />
 
-        {/* Tabs actualizadas */}
-        <div className="tabs-custom d-flex mb-4">
-          <button
-            className={`tab-custom flex-fill text-center py-2 fw-semibold ${activeTab === 'collection' ? 'active' : ''}`}
-            onClick={() => setActiveTab('collection')}
-          >
-            Mi Colección ({collection.length})
-          </button>
-          <button
-            className={`tab-custom flex-fill text-center py-2 fw-semibold ${activeTab === 'wishlist' ? 'active' : ''}`}
-            onClick={() => setActiveTab('wishlist')}
-          >
-            Wishlist ({wishlist.length})
-          </button>
+        {/* Contenedor de Tabs */}
+        <div className="tabs-wrapper">
+          <div className="tabs-custom d-flex mb-4">
+            <button
+              className={`tab-custom flex-fill text-center py-2 fw-semibold ${activeTab === 'collection' ? 'active' : ''}`}
+              onClick={() => setActiveTab('collection')}
+            >
+              Mi Colección ({collection.length})
+            </button>
+            <button
+              className={`tab-custom flex-fill text-center py-2 fw-semibold ${activeTab === 'wishlist' ? 'active' : ''}`}
+              onClick={() => setActiveTab('wishlist')}
+            >
+              Wishlist ({wishlist.length})
+            </button>
+          </div>
         </div>
 
-        {/* Nuevo componente Display */}
         <Display
           perfumes={perfumes}
           activeTab={activeTab}
