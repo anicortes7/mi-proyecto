@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import SearchModal from '../components/SearchModal';
-import PerfumeCard from '../components/PerfumeCard';
+import Display from '../components/Display';
 
 export default function Home() {
   const [perfumes, setPerfumes] = useState([]);
@@ -61,7 +61,7 @@ export default function Home() {
               alt="Agregar"
               className="btn-add-icon"
             />
-            <span className="fw-bold ">Agregar Perfume</span>
+            <span className="fw-bold">Agregar Perfume</span>
           </button>
         </div>
 
@@ -87,39 +87,14 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Contenido */}
-        {activeTab === 'collection' && (
-          <>
-            {collection.length === 0 && <p>No hay perfumes en tu colección aún.</p>}
-            <div className="row">
-              {collection.map((perfume) => (
-                <PerfumeCard
-                  key={perfume.id}
-                  perfume={perfume}
-                  onDelete={handleDelete}
-                  onUpdated={fetchPerfumes}
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {activeTab === 'wishlist' && (
-          <>
-            {wishlist.length === 0 && <p>No hay perfumes en tu wishlist aún.</p>}
-            <div className="row">
-              {wishlist.map((perfume) => (
-                <PerfumeCard
-                  key={perfume.id}
-                  perfume={perfume}
-                  onDelete={handleDelete}
-                  onUpdated={fetchPerfumes}
-                  onMoveToCollection={moveToCollection}
-                />
-              ))}
-            </div>
-          </>
-        )}
+        {/* Nuevo componente Display */}
+        <Display
+          perfumes={perfumes}
+          activeTab={activeTab}
+          onDelete={handleDelete}
+          onUpdated={fetchPerfumes}
+          onMoveToCollection={moveToCollection}
+        />
       </main>
     </>
   );
