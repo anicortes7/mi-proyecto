@@ -40,10 +40,10 @@ button:hover {
   opacity: 0.9;
 }
 
-/* Botón primario (Agregar Perfume) sin borde */
+/* Botón primario */
 .btn-primary {
   background-color: var(--color-primary);
-  color:var(--color-accentlight);
+  color: var(--color-accentlight);
 }
 
 .btn-primary:hover {
@@ -54,26 +54,26 @@ button:hover {
 .btn-secondary {
   background-color: transparent;
   color: var(--color-primary);
-  border: none; /* sin borde claro */
+  border: none;
 }
 
 .btn-secondary.active {
   background-color: var(--color-primary);
-  color: var(--color-accentlight)
+  color: var(--color-accentlight);
 }
 
 /* Tarjetas */
 .card {
   border-radius: 8px;
   background: var(--color-accentlight);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 1rem;
   transition: box-shadow 0.2s ease-in-out;
-  color: #003049;
+  color: var(--color-text);
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Inputs */
@@ -99,7 +99,7 @@ textarea:focus {
   border-radius: 8px;
 }
 
-/* Badges dentro de PerfumeCard */
+/* Badges */
 .badge {
   background: var(--color-secondary);
   color: var(--color-accentlight);
@@ -108,63 +108,9 @@ textarea:focus {
   font-size: 0.75rem;
 }
 
-/* Contenedor de tabs */
-.nav-tabs {
-  display: flex;
-  width: 100%;
-}
-
-.nav-link {
-  flex: 1;
-  text-align: center;
-  background: transparent;
-  border: none;
-  color: var(--color-primary);
-  border-radius: 0;
-  padding: 0.75rem 1rem;
-}
-
-.nav-link.active {
-  background: var(--color-primary);
-  color: var(--color-accentlight)
-}
-
-/* Contenedor tabs envuelto */
-.tab-container {
-  background: var(--color-bg);
-  border-radius: 8px;
-  padding: 0;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-}
-
-/* Botón sin borde extra si le llega no-border */
+/* Botón sin borde extra */
 .no-border {
   border: none !important;
-}
-/* Tabs */
-.tabs-custom {
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--color-muted);
-  background: var(--color-bg);
-}
-
-.tab-custom {
-  border: none;
-  background: var(--color-bg);
-  color: var(--color-text);
-  transition: background 0.2s;
-}
-
-.tab-custom.active {
-  background: var(--color-accentlight);
-  color: var(--color-text);
-}
-
-.tab-custom:hover {
-  background: var(--color-muted);
-  cursor: pointer;
 }
 
 /* Botón Agregar Perfume */
@@ -191,16 +137,52 @@ textarea:focus {
   width: 20px;
   height: 20px;
 }
-/* Wrapper de tabs un poco más grande */
+
+/* -----------------------------
+   TABS WRAPPER AJUSTADO
+------------------------------ */
+
+/* Wrapper exterior: 100% ancho, centrado */
 .tabs-wrapper {
+  width: 100%;
   display: flex;
   justify-content: center;
 }
 
+/* Contenedor interior: 2px más chico */
 .tabs-custom {
-  width: calc(100% - 2px); /* 2px menos para que quede dentro */
+  width: calc(100% - 2px);
+  max-width: 100%;
+  display: flex;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--color-muted);
   background: var(--color-bg);
+}
+
+.tab-custom {
+  flex: 1;
+  border: none;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: background 0.2s;
+  text-align: center;
+  padding: 0.75rem 1rem;
+}
+
+.tab-custom.active {
+  background: var(--color-accentlight);
+  color: var(--color-text);
+}
+
+.tab-custom:hover {
+  background: var(--color-muted);
+  cursor: pointer;
+}
+
+/* Responsive para pantallas chicas */
+@media (max-width: 768px) {
+  .tabs-custom {
+    width: calc(100% - 2px);
+  }
 }

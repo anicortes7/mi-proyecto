@@ -72,22 +72,23 @@ export default function Home() {
         />
 
         {/* Contenedor de Tabs */}
-        <div className="tabs-wrapper">
-          <div className="tabs-custom d-flex mb-4">
+        <div className="tabs-wrapper mb-4">
+          <div className="tabs-custom">
             <button
-              className={`tab-custom flex-fill text-center py-2 fw-semibold ${activeTab === 'collection' ? 'active' : ''}`}
+              className={`tab-custom fw-semibold ${activeTab === 'collection' ? 'active' : ''}`}
               onClick={() => setActiveTab('collection')}
             >
               Mi Colección ({collection.length})
             </button>
             <button
-              className={`tab-custom flex-fill text-center py-2 fw-semibold ${activeTab === 'wishlist' ? 'active' : ''}`}
+              className={`tab-custom fw-semibold ${activeTab === 'wishlist' ? 'active' : ''}`}
               onClick={() => setActiveTab('wishlist')}
             >
               Wishlist ({wishlist.length})
             </button>
           </div>
         </div>
+
 
         <Display
           perfumes={perfumes}
