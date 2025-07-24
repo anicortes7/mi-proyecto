@@ -29,7 +29,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
   return (
     <div className="col-md-4 mb-4">
       <div className="card h-100 shadow-sm d-flex flex-column">
-        <div className="card-body d-flex flex-column flex-grow-1">
+        <div className="card-body d-flex flex-column flex-grow-1 pb-2">
           <div className="d-flex align-items-center justify-content-between mb-2">
             <h5 className="card-title mb-0">{perfume.name}</h5>
             <div className="d-flex flex-column align-items-end">
@@ -102,9 +102,10 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
           </div>
 
           {/* Botones */}
-          <div className="mt-auto d-flex justify-content-end gap-2 pt-3 pb-0">
+          <div className="mt-auto d-flex justify-content-end gap-2 pt-3">
             <button
               className="btn btn-sm btn-secondary"
+              style={{ color: 'var(--color-primary)', border: '1px solid var(--color-primary)' }}
               onClick={() => setShowEdit(true)}
             >
               Editar
