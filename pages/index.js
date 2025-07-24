@@ -71,9 +71,9 @@ export default function Home() {
           onPerfumeAdded={fetchPerfumes}
         />
 
-        {/* Contenedor de Tabs */}
+        {/* Tabs con indicador animado */}
         <div className="tabs-wrapper mb-4">
-          <div className="tabs-custom">
+          <div className="tabs-custom with-indicator">
             <button
               className={`tab-custom fw-semibold ${activeTab === 'collection' ? 'active' : ''}`}
               onClick={() => setActiveTab('collection')}
@@ -86,9 +86,9 @@ export default function Home() {
             >
               Wishlist ({wishlist.length})
             </button>
+            <div className={`tab-indicator ${activeTab}`}></div>
           </div>
         </div>
-
 
         <Display
           perfumes={perfumes}
