@@ -11,7 +11,7 @@ export default function Display({
   const wishlist = perfumes.filter((p) => p.wishlist);
 
   return (
-    <div className="display-content">
+    <>
       {activeTab === 'collection' && (
         <>
           {collection.length === 0 && <p>No hay perfumes en tu colección aún.</p>}
@@ -44,6 +44,6 @@ export default function Display({
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }

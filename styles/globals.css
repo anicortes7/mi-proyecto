@@ -40,10 +40,10 @@ button:hover {
   opacity: 0.9;
 }
 
-/* Botón primario (Agregar Perfume) */
+/* Botón primario (Agregar Perfume) sin borde */
 .btn-primary {
   background-color: var(--color-primary);
-  color: var(--color-accentlight);
+  color:var(--color-accentlight);
 }
 
 .btn-primary:hover {
@@ -54,26 +54,26 @@ button:hover {
 .btn-secondary {
   background-color: transparent;
   color: var(--color-primary);
-  border: none;
+  border: none; /* sin borde claro */
 }
 
 .btn-secondary.active {
   background-color: var(--color-primary);
-  color: var(--color-accentlight);
+  color: var(--color-accentlight)
 }
 
 /* Tarjetas */
 .card {
   border-radius: 8px;
   background: var(--color-accentlight);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   padding: 1rem;
   transition: box-shadow 0.2s ease-in-out;
   color: #003049;
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 /* Inputs */
@@ -126,7 +126,7 @@ textarea:focus {
 
 .nav-link.active {
   background: var(--color-primary);
-  color: var(--color-accentlight);
+  color: var(--color-accentlight)
 }
 
 /* Contenedor tabs envuelto */
@@ -135,14 +135,13 @@ textarea:focus {
   border-radius: 8px;
   padding: 0;
   margin-bottom: 1rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 /* Botón sin borde extra si le llega no-border */
 .no-border {
   border: none !important;
 }
-
 /* Tabs */
 .tabs-custom {
   border-radius: 8px;
@@ -191,10 +190,4 @@ textarea:focus {
 .btn-add-icon {
   width: 20px;
   height: 20px;
-}
-
-/* ✅ Nuevo: Contenedor de contenido ligeramente más estrecho */
-.display-content {
-  width: calc(100% - 2px);
-  margin: 0 auto;
 }
