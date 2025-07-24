@@ -156,11 +156,13 @@ textarea:focus {
   display: flex;
   border-radius: 8px;
   overflow: hidden;
+  background: var(--color-bg);
 }
+
 .tab-custom {
   flex: 1;
   border: none;
-  background: var(--color-accentlight);
+  background: var(--color-bg);
   color: var(--color-text);
   transition: background 0.2s;
   text-align: center;
@@ -168,7 +170,7 @@ textarea:focus {
 }
 
 .tab-custom.active {
-  background: var(--color-accent);
+  background: var(--color-accentlight);
   color: var(--color-text);
 }
 
