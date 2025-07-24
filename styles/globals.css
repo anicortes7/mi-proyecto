@@ -40,20 +40,10 @@ button:hover {
   opacity: 0.9;
 }
 
-/* Botón eliminar */
-.btn-delete {
-  background-color: #c1121f;
-  color: white;
-}
-
-.btn-delete:hover {
-  background-color: #780000;
-}
-
 /* Botón primario (Agregar Perfume) sin borde */
 .btn-primary {
   background-color: var(--color-primary);
-  color: #fff;
+  color:var(--color-accentlight);
 }
 
 .btn-primary:hover {
@@ -69,7 +59,7 @@ button:hover {
 
 .btn-secondary.active {
   background-color: var(--color-primary);
-  color: #fff;
+  color: var(--color-accentlight)
 }
 
 /* Tarjetas */
@@ -112,7 +102,7 @@ textarea:focus {
 /* Badges dentro de PerfumeCard */
 .badge {
   background: var(--color-secondary);
-  color: #fff;
+  color: var(--color-accentlight);
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -136,7 +126,7 @@ textarea:focus {
 
 .nav-link.active {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-accentlight)
 }
 
 /* Contenedor tabs envuelto */

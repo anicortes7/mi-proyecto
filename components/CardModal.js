@@ -64,7 +64,7 @@ export default function CardModal({ perfume, onClose, onDelete, onUpdated }) {
               </div>
             )}
 
-            <div className="d-flex justify-content-end gap-3 mt-4">
+            <div className="d-flex justify-content-end gap-1 mt-4">
               <button
                 onClick={handleUpdate}
                 style={{ background: 'none', border: 'none', cursor: 'pointer' }}
