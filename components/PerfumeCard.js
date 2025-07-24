@@ -102,7 +102,7 @@ export default function PerfumeCard({ perfume, onDelete, onUpdated, onMoveToColl
           </div>
 
           {/* Botones */}
-          <div className="mt-auto d-flex justify-content-end gap-2 pt-3 pb-1">
+          <div className="mt-auto d-flex justify-content-end gap-2 pt-3 pb-0">
             <button
               className="btn btn-sm btn-secondary"
               onClick={() => setShowEdit(true)}
