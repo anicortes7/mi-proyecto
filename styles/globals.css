@@ -160,7 +160,7 @@ textarea:focus {
 .tab-custom {
   flex: 1;
   border: none;
-  background: var(--color-secondary);
+  background: var(--color-accentlight);
   color: var(--color-text);
   transition: background 0.2s;
   text-align: center;
